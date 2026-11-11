@@ -1,0 +1,89 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import ChairCard from '../components/ChairCard.astro';
+import Calculator from '../components/Calculator.astro';
+import Sections from '../components/Sections.astro';
+import Quiz from '../components/Quiz.astro';
+import Faq from '../components/Faq.astro';
+import Cta from '../components/Cta.astro';
+import Icon from '../components/Icon.astro';
+import { CHAIRS, FAQ, PRICES, SITE } from '../data/site';
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const offerSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  serviceType: 'Прокат инвалидных колясок',
+  provider: { '@id': `${SITE.url}/#business` },
+  areaServed: 'Москва',
+  offers: [
+    { '@type': 'Offer', name: `Аренда на ${PRICES.minDays} дня`, price: PRICES.minPrice, priceCurrency: 'RUB' },
+    { '@type': 'Offer', name: 'Аренда на 30 дней', price: PRICES.monthDays * PRICES.monthPerDay, priceCurrency: 'RUB' },
+  ],
+};
+const ticker = ['Без залога', 'Дезинфекция перед каждой выдачей', 'Аренда от 3 дней', 'Ремонт за наш счёт', 'Бесплатная замена', 'Самовывоз бесплатно', 'Ottobock и Ortonica'];
+---
+<Base
+  title="Аренда инвалидной коляски в Москве без залога — прокат от 200 ₽/день"
+  description="Прокат инвалидных колясок в Москве: без залога, от 3 дней, от 200 ₽ в день. Дезинфекция перед каждой выдачей, бесплатная замена, самовывоз бесплатно, доставка курьером. ☎ +7 968 808-89-88"
+  keywords="аренда инвалидной коляски, прокат инвалидных колясок москва, инвалидное кресло напрокат, коляска инвалидная аренда без залога, взять инвалидную коляску в аренду"
+  schema={[faqSchema, offerSchema]}
+  darkHeader
+>
+  <Hero />
+
+  <div class="overflow-hidden border-y border-ink/5 bg-paper py-5" aria-hidden="true">
+    <div class="marquee flex w-max gap-10 font-display text-lg font-semibold whitespace-nowrap text-ink/80">
+      {[...ticker, ...ticker].map((t) => <span class="flex items-center gap-10">{t}<span class="text-coral">✦</span></span>)}
+    </div>
+  </div>
+
+  <section class="py-20 md:py-28" id="katalog">
+    <div class="container-x">
+      <div class="reveal flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <div class="max-w-2xl">
+          <span class="eyebrow">Каталог</span>
+          <h2 class="h2 mt-4">Коляски, которые мы сдаём в аренду</h2>
+        </div>
+        <a href="/katalog/" class="inline-flex items-center gap-2 font-bold text-coral hover:underline">Весь каталог <Icon name="arrow" class="size-5" /></a>
+      </div>
+      <div class="mt-12 grid gap-6 md:grid-cols-2">
+        {CHAIRS.map((c, i) => <ChairCard chair={c} index={i} />)}
+      </div>
+      <div class="reveal mt-6 flex flex-col items-start gap-4 rounded-[28px] bg-ink-2 p-6 text-white md:flex-row md:items-center md:justify-between md:p-8">
+        <div class="flex items-center gap-4">
+          <span class="grid size-12 shrink-0 place-items-center rounded-2xl bg-coral font-display text-lg font-semibold">%</span>
+          <div>
+            <p class="text-lg font-bold">Распродажа кресел Ottobock</p>
+            <p class="text-white/65">Хотите не арендовать, а купить? Расскажем, какие кресла есть в наличии.</p>
+          </div>
+        </div>
+        <a href={SITE.phoneHref} class="btn bg-white text-ink hover:bg-cream">Узнать подробнее</a>
+      </div>
+    </div>
+  </section>
+
+  <Calculator />
+  <Sections only={['benefits', 'steps']} />
+  <Quiz />
+  <Sections only={['delivery', 'reviews']} />
+  <Faq limit={6} />
+
+  <section class="pb-16">
+    <div class="container-x">
+      <div class="reveal prose-rwc max-w-3xl">
+        <h2>Прокат инвалидных колясок в Москве</h2>
+        <p>Инвалидная коляска часто нужна на время: после операции или перелома, на период реабилитации, для поездки с пожилым родственником или на выписку из больницы. Покупать дорогое кресло ради нескольких недель невыгодно — проще взять коляску в аренду.</p>
+        <p>Мы сдаём напрокат складные облегчённые коляски Ortonica и немецкие Ottobock. <a href="/ceny/">Аренда</a> — от {PRICES.minDays} дней и без залога, а при сроке от месяца день обходится всего в {PRICES.monthPerDay} ₽. Перед каждой выдачей кресло проходит техническое обслуживание и дезинфекцию. Забрать коляску можно самостоятельно или заказать <a href="/dostavka/">доставку по Москве</a>.</p>
+        <p>Не знаете, какая модель подойдёт? Ответьте на 4 вопроса в форме подбора — мы учтём вес и рост человека, ширину дверей и лифта. Почитайте также, <a href="/stati/kak-vybrat-invalidnuyu-kolyasku/">как выбрать инвалидную коляску</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <Cta />
+</Base>

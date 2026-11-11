@@ -1,0 +1,107 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../data/site';
+
+type Crumb = { name: string; href: string };
+type Props = {
+  title: string;
+  description: string;
+  keywords?: string;
+  crumbs?: Crumb[];
+  schema?: Record<string, unknown>[];
+  ogImage?: string;
+  darkHeader?: boolean;
+};
+const { title, description, keywords, crumbs = [], schema = [], ogImage = '/og.jpg', darkHeader = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+
+const business = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': `${SITE.url}/#business`,
+  name: `${SITE.name} — ${SITE.brand}`,
+  description: 'Прокат и аренда инвалидных колясок в Москве без залога, от 3 дней. Доставка, дезинфекция перед каждой выдачей.',
+  url: SITE.url,
+  telephone: SITE.phone,
+  email: SITE.email,
+  image: `${SITE.url}/img/chair-front.webp`,
+  priceRange: 'от 200 ₽/день',
+  areaServed: { '@type': 'City', name: 'Москва' },
+  address: { '@type': 'PostalAddress', addressLocality: 'Москва', addressCountry: 'RU' },
+  sameAs: [SITE.telegramBot],
+};
+
+const breadcrumbs = crumbs.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [{ name: 'Главная', href: '/' }, ...crumbs].map((c, i) => ({
+        '@type': 'ListItem', position: i + 1, name: c.name, item: new URL(c.href, SITE.url).href,
+      })),
+    }
+  : null;
+const ld = [business, ...(breadcrumbs ? [breadcrumbs] : []), ...schema];
+---
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  {keywords && <meta name="keywords" content={keywords} />}
+  <link rel="canonical" href={canonical} />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#0e1a36" />
+  <meta name="geo.region" content="RU-MOW" />
+  <meta name="geo.placename" content="Москва" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="ru_RU" />
+  <meta property="og:site_name" content={SITE.brand} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={new URL(ogImage, SITE.url).href} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preload" as="image" href="/img/chair-front.webp" type="image/webp" />
+  {ld.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+  <!-- Яндекс.Метрика / VK Pixel: вставьте сюда код счётчиков со старого сайта -->
+</head>
+<body>
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2">К содержимому</a>
+  <Header dark={darkHeader} />
+  <main id="main">
+    {crumbs.length > 0 && (
+      <nav aria-label="Хлебные крошки" class="container-x pt-28 text-sm text-muted">
+        <ol class="flex flex-wrap items-center gap-1.5">
+          <li><a href="/" class="hover:text-coral">Главная</a></li>
+          {crumbs.map((c, i) => (
+            <li class="flex items-center gap-1.5">
+              <span aria-hidden="true">/</span>
+              {i === crumbs.length - 1 ? <span aria-current="page" class="text-ink">{c.name}</span> : <a href={c.href} class="hover:text-coral">{c.name}</a>}
+            </li>
+          ))}
+        </ol>
+      </nav>
+    )}
+    <slot />
+  </main>
+  <Footer />
+
+  <!-- Липкая панель на мобильном -->
+  <div class="fixed inset-x-3 bottom-3 z-40 flex gap-2 md:hidden" data-mobilebar>
+    <a href={SITE.phoneHref} class="btn btn-dark flex-1 !py-3.5 shadow-xl" aria-label={`Позвонить ${SITE.phone}`}>
+      <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1z"/></svg>
+      Позвонить
+    </a>
+    <a href="/#podbor" class="btn btn-primary flex-1 !py-3.5 shadow-xl">Подобрать</a>
+  </div>
+
+  <script>
+    import '../scripts/ui';
+  </script>
+</body>
+</html>

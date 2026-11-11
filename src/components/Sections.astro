@@ -1,0 +1,111 @@
+---
+// Набор блоков главной: преимущества, шаги, доставка, отзывы
+import Icon from './Icon.astro';
+import { BENEFITS, STEPS, REVIEWS, SITE } from '../data/site';
+type Props = { only?: ('benefits' | 'steps' | 'delivery' | 'reviews')[] };
+const { only = ['benefits', 'steps', 'delivery', 'reviews'] } = Astro.props;
+---
+{only.includes('benefits') && (
+  <section class="py-20 md:py-28" id="pochemu-my">
+    <div class="container-x">
+      <div class="reveal flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <div class="max-w-2xl">
+          <span class="eyebrow">Почему нам доверяют</span>
+          <h2 class="h2 mt-4">Берём на себя всё, что можно взять</h2>
+        </div>
+        <p class="max-w-sm text-lg text-muted">В трудный период не должно быть лишних забот: ни залогов, ни ремонта, ни поисков, где почистить кресло.</p>
+      </div>
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {BENEFITS.map((b, i) => (
+          <div class:list={['reveal tilt card group relative overflow-hidden p-7', i === 0 && 'bg-ink text-white']} style={`--d:${(i % 3) * 90}ms`} data-tilt="6">
+            <span class:list={['pop grid size-14 place-items-center rounded-2xl', i === 0 ? 'bg-coral text-white' : 'bg-mist text-coral']}><Icon name={b.icon} class="size-7" /></span>
+            <h3 class:list={['pop mt-6 font-semibold', 'text-xl']}>{b.title}</h3>
+            <p class:list={['mt-3 text-[16px] leading-relaxed', i === 0 ? 'text-white/70' : 'text-muted']}>{b.text}</p>
+            <span class="glare"></span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+{only.includes('steps') && (
+  <section class="bg-paper py-20 md:py-28" id="kak-arendovat">
+    <div class="container-x">
+      <div class="reveal max-w-2xl">
+        <span class="eyebrow">Как это работает</span>
+        <h2 class="h2 mt-4">Кресло у вас — в 3 шага</h2>
+      </div>
+      <ol class="relative mt-14 grid gap-10 md:grid-cols-3 md:gap-6">
+        <div class="absolute top-8 right-[16%] left-[16%] hidden h-0.5 bg-[repeating-linear-gradient(90deg,var(--color-coral)_0_10px,transparent_10px_20px)] md:block" aria-hidden="true"></div>
+        {STEPS.map((s, i) => (
+          <li class="reveal relative text-center" style={`--d:${i * 150}ms`}>
+            <span class="relative mx-auto grid size-16 place-items-center rounded-full bg-ink font-display text-2xl font-semibold text-white ring-8 ring-paper">{i + 1}</span>
+            <h3 class="mt-6 text-xl font-semibold">{s.title}</h3>
+            <p class="mx-auto mt-3 max-w-xs text-muted">{s.text}</p>
+          </li>
+        ))}
+      </ol>
+      <div class="reveal mt-12 text-center"><a href="#podbor" class="btn btn-primary">Оставить заявку <Icon name="arrow" class="size-5" /></a></div>
+    </div>
+  </section>
+)}
+
+{only.includes('delivery') && (
+  <section class="py-20 md:py-28" id="dostavka">
+    <div class="container-x grid gap-6 lg:grid-cols-2">
+      <div class="reveal">
+        <span class="eyebrow">Доставка</span>
+        <h2 class="h2 mt-4">Заберите сами или привезём к двери</h2>
+        <p class="mt-4 max-w-lg text-lg text-muted">Отправляем и забираем кресло через Яндекс.Доставку — не нужно никуда ехать. Самовывоз бесплатный.</p>
+        <a href="/dostavka/" class="mt-6 inline-flex items-center gap-2 font-bold text-coral hover:underline">Подробнее об условиях <Icon name="arrow" class="size-5" /></a>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div class="reveal card p-7">
+          <Icon name="pin" class="size-8 text-coral" />
+          <p class="mt-5 text-xl font-semibold">Самовывоз</p>
+          <p class="mt-2 text-muted">Бесплатно. Покажем, как раскладывать и пользоваться креслом.</p>
+        </div>
+        <div class="reveal card p-7" style="--d:100ms">
+          <Icon name="truck" class="size-8 text-coral" />
+          <p class="mt-5 text-xl font-semibold">Курьер</p>
+          <p class="mt-2 text-muted">Яндекс.Доставка в обе стороны, по тарифам сервиса.</p>
+        </div>
+        <div class="reveal card p-7 sm:col-span-2" style="--d:200ms">
+          <div class="flex items-center gap-4">
+            <span class="grid size-12 place-items-center rounded-2xl bg-mist text-coral"><Icon name="clock" /></span>
+            <div>
+              <p class="text-[14px] font-bold text-muted">Время доставки</p>
+              <p class="text-lg font-semibold">{SITE.deliveryHours}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+)}
+
+{only.includes('reviews') && (
+  <section class="overflow-hidden bg-ink py-20 text-white md:py-28" id="otzyvy">
+    <div class="container-x">
+      <div class="reveal flex flex-col justify-between gap-4 md:flex-row md:items-end">
+        <div>
+          <span class="eyebrow">Отзывы</span>
+          <h2 class="h2 mt-4">Что пишут клиенты</h2>
+        </div>
+        <p class="flex items-center gap-1 text-coral" aria-label="Оценка 5 из 5">{[1, 2, 3, 4, 5].map(() => <Icon name="star" class="size-6" />)}<span class="ml-2 text-white/60">из переписок в мессенджерах</span></p>
+      </div>
+      <div class="mt-12 grid gap-4 md:grid-cols-2">
+        {REVIEWS.map((r, i) => (
+          <figure class="reveal rounded-[28px] bg-white/[.06] p-7 ring-1 ring-white/10 backdrop-blur md:p-9" style={`--d:${(i % 2) * 120}ms`}>
+            <blockquote class="text-[17px] leading-relaxed text-white/85">«{r.text}»</blockquote>
+            <figcaption class="mt-6 flex items-center gap-3">
+              <span class="grid size-11 place-items-center rounded-full bg-coral font-display font-semibold">{r.name[0]}</span>
+              <span><b class="block">{r.name}</b><span class="text-[14px] text-white/50">{r.when}</span></span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

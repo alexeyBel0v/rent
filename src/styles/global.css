@@ -1,0 +1,88 @@
+@import '@fontsource-variable/manrope';
+@import '@fontsource-variable/unbounded';
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Manrope Variable', system-ui, sans-serif;
+  --font-display: 'Unbounded Variable', 'Manrope Variable', sans-serif;
+
+  --color-ink: #0e1a36;
+  --color-ink-2: #1a2a52;
+  --color-navy: #13204a;
+  --color-cream: #f6f3ee;
+  --color-paper: #fffdf9;
+  --color-mist: #e3eaf7;
+  --color-sky: #8fb4ff;
+  --color-coral: #e5484d;
+  --color-coral-dark: #c8343a;
+  --color-mint: #3ccf9a;
+  --color-muted: #5d6886;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    @apply bg-cream text-ink font-sans antialiased;
+    font-feature-settings: 'ss01';
+  }
+  h1, h2, h3 { @apply font-display; text-wrap: balance; letter-spacing: -0.01em; }
+  p { text-wrap: pretty; }
+  :focus-visible { outline: 3px solid var(--color-sky); outline-offset: 3px; border-radius: 6px; }
+  ::selection { background: var(--color-coral); color: white; }
+}
+
+@layer components {
+  .container-x { @apply mx-auto w-full max-w-[1200px] px-5 md:px-8; }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 font-bold text-[15px] leading-none select-none;
+    transition: transform .2s var(--ease-out-expo), background-color .2s, box-shadow .2s;
+  }
+  .btn:active { transform: scale(.96); }
+  .btn-primary { @apply bg-coral text-white; box-shadow: 0 10px 30px -10px rgb(229 72 77 / .7); }
+  .btn-primary:hover { @apply bg-coral-dark; box-shadow: 0 14px 34px -10px rgb(229 72 77 / .85); }
+  .btn-ghost { @apply bg-white/10 text-white ring-1 ring-white/25 backdrop-blur; }
+  .btn-ghost:hover { @apply bg-white/20; }
+  .btn-dark { @apply bg-ink text-white; }
+  .btn-dark:hover { @apply bg-ink-2; }
+  .eyebrow { @apply inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-[13px] font-bold text-coral ring-1 ring-ink/5; }
+  .h2 { @apply text-[28px] leading-[1.15] font-semibold md:text-[44px]; }
+  .card { @apply rounded-[28px] bg-paper ring-1 ring-ink/[.06]; box-shadow: 0 1px 0 rgb(14 26 54 / .04), 0 20px 50px -30px rgb(14 26 54 / .25); }
+  .prose-rwc h2 { @apply mt-10 mb-3 text-2xl font-semibold md:text-3xl; }
+  .prose-rwc h3 { @apply mt-6 mb-2 text-xl font-semibold; }
+  .prose-rwc p { @apply mb-4 text-[17px] leading-relaxed text-ink/85; }
+  .prose-rwc ul { @apply mb-4 list-disc space-y-1.5 pl-6 text-[17px] text-ink/85; }
+  .prose-rwc a { @apply font-semibold text-coral underline underline-offset-4; }
+}
+
+/* Появление при прокрутке */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease-out-expo), transform .8s var(--ease-out-expo); transition-delay: var(--d, 0ms); }
+.reveal.is-in { opacity: 1; transform: none; }
+
+/* 3D-наклон карточек */
+.tilt { transform-style: preserve-3d; transition: transform .5s var(--ease-out-expo); will-change: transform; }
+.tilt .pop { transform: translateZ(60px); transition: transform .5s var(--ease-out-expo); }
+.tilt .glare { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(600px circle at var(--gx, 50%) var(--gy, 50%), rgb(255 255 255 / .35), transparent 40%); }
+.tilt:hover .glare { opacity: 1; }
+
+/* Бегущая строка */
+@keyframes marquee { to { transform: translateX(-50%); } }
+.marquee { animation: marquee 40s linear infinite; }
+
+@keyframes floaty { 50% { transform: translateY(-10px); } }
+.floaty { animation: floaty 6s ease-in-out infinite; }
+
+/* Ползунки */
+input[type='range'] { -webkit-appearance: none; appearance: none; width: 100%; height: 8px; border-radius: 99px; outline: none;
+  background: linear-gradient(to right, var(--color-coral) var(--p, 0%), var(--color-mist) var(--p, 0%)); }
+input[type='range']::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; border-radius: 50%; background: white; border: 7px solid var(--color-coral); cursor: grab; box-shadow: 0 4px 14px rgb(229 72 77 / .4); }
+input[type='range']::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: white; border: 7px solid var(--color-coral); cursor: grab; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .marquee, .floaty { animation: none; }
+  .tilt, .tilt .pop { transform: none !important; }
+  html { scroll-behavior: auto; }
+}

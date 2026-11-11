@@ -1,0 +1,10 @@
+---
+type Props = { title: string; lead?: string; eyebrow?: string };
+const { title, lead, eyebrow } = Astro.props;
+---
+<header class="container-x pt-8 pb-10 md:pt-12 md:pb-14">
+  {eyebrow && <span class="eyebrow">{eyebrow}</span>}
+  <h1 class="mt-4 max-w-4xl text-[34px] leading-[1.08] font-semibold md:text-[56px]">{title}</h1>
+  {lead && <p class="mt-5 max-w-2xl text-lg text-muted md:text-xl">{lead}</p>}
+  <slot />
+</header>

@@ -1,0 +1,29 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import ChairCard from '../../components/ChairCard.astro';
+import Quiz from '../../components/Quiz.astro';
+import Cta from '../../components/Cta.astro';
+import { CHAIRS, SITE } from '../../data/site';
+const list = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: CHAIRS.map((c, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE.url}/katalog/${c.slug}/`, name: c.name })),
+};
+---
+<Base
+  title="Каталог инвалидных колясок в аренду — Ortonica, Ottobock | Москва"
+  description="Инвалидные коляски напрокат в Москве: облегчённые складные Ortonica и немецкие Ottobock. Без залога, от 3 дней, дезинфекция перед выдачей."
+  keywords="инвалидные коляски каталог аренда, коляска ortonica аренда, ottobock старт аренда, складная инвалидная коляска напрокат"
+  crumbs={[{ name: 'Каталог', href: '/katalog/' }]}
+  schema={[list]}
+>
+  <PageHead eyebrow="Каталог" title="Инвалидные коляски в аренду" lead="Небольшой, но проверенный парк кресел. Каждое проходит ТО и дезинфекцию перед выдачей. Не знаете, что выбрать, — подберём по 4 вопросам." />
+  <section class="container-x pb-10">
+    <div class="grid gap-6 md:grid-cols-2">
+      {CHAIRS.map((c, i) => <ChairCard chair={c} index={i} />)}
+    </div>
+  </section>
+  <Quiz />
+  <Cta />
+</Base>

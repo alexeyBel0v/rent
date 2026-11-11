@@ -1,0 +1,70 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { SITE } from '../data/site';
+type Props = { dark?: boolean };
+const { dark = false } = Astro.props;
+const nav = [
+  { href: '/katalog/', label: 'Каталог' },
+  { href: '/ceny/', label: 'Цены' },
+  { href: '/dostavka/', label: 'Доставка' },
+  { href: '/#otzyvy', label: 'Отзывы' },
+  { href: '/faq/', label: 'Вопросы' },
+  { href: '/kontakty/', label: 'Контакты' },
+];
+---
+<header class="fixed inset-x-0 top-0 z-50 transition-all duration-300" data-header data-dark={dark ? '1' : '0'}>
+  <div class="container-x">
+    <div class="mt-3 flex items-center justify-between gap-4 rounded-full px-3 py-2 pl-4 transition-all duration-300 md:px-4 md:pl-5" data-header-bar>
+      <span class="header-logo-light hidden"><Logo light /></span>
+      <span class="header-logo-dark"><Logo /></span>
+      <nav class="hidden items-center gap-1 lg:flex" aria-label="Основное меню">
+        {nav.map((n) => (
+          <a href={n.href} class="header-link rounded-full px-3.5 py-2 text-[15px] font-semibold transition-colors">{n.label}</a>
+        ))}
+      </nav>
+      <div class="flex items-center gap-2">
+        <a href={SITE.phoneHref} class="header-phone hidden font-bold whitespace-nowrap md:block">{SITE.phone}</a>
+        <a href="/#podbor" class="btn btn-primary hidden !px-5 !py-3 whitespace-nowrap sm:inline-flex">Подобрать кресло</a>
+        <button class="header-burger grid size-11 place-items-center rounded-full lg:hidden" aria-label="Открыть меню" aria-expanded="false" data-burger>
+          <Icon name="menu" />
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="fixed inset-0 z-50 hidden bg-ink/97 backdrop-blur-xl" data-menu role="dialog" aria-modal="true" aria-label="Меню">
+    <div class="container-x flex h-full flex-col pt-6 pb-10">
+      <div class="flex items-center justify-between">
+        <Logo light />
+        <button class="grid size-11 place-items-center rounded-full bg-white/10 text-white" aria-label="Закрыть меню" data-menu-close><Icon name="close" /></button>
+      </div>
+      <nav class="mt-10 flex flex-col gap-1" aria-label="Мобильное меню">
+        {nav.map((n) => <a href={n.href} class="font-display py-2.5 text-3xl font-semibold text-white" data-menu-link>{n.label}</a>)}
+      </nav>
+      <div class="mt-auto flex flex-col gap-3">
+        <a href={SITE.phoneHref} class="font-display text-2xl font-semibold text-white">{SITE.phone}</a>
+        <div class="flex gap-2">
+          <a href={SITE.whatsappHref} class="btn btn-ghost flex-1" target="_blank" rel="noopener">WhatsApp</a>
+          <a href={SITE.telegramBot} class="btn btn-ghost flex-1" target="_blank" rel="noopener">Telegram</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  [data-header-bar] { background: transparent; }
+  [data-header] .header-link, [data-header] .header-phone, [data-header] .header-burger { color: var(--color-ink); }
+  [data-header] .header-link:hover { background: rgb(14 26 54 / .06); }
+  [data-header][data-dark='1']:not(.is-scrolled) .header-link,
+  [data-header][data-dark='1']:not(.is-scrolled) .header-phone,
+  [data-header][data-dark='1']:not(.is-scrolled) .header-burger { color: white; }
+  [data-header][data-dark='1']:not(.is-scrolled) .header-link:hover { background: rgb(255 255 255 / .1); }
+  [data-header][data-dark='1']:not(.is-scrolled) .header-logo-light { display: block; }
+  [data-header][data-dark='1']:not(.is-scrolled) .header-logo-dark { display: none; }
+  [data-header].is-scrolled [data-header-bar] {
+    background: rgb(255 253 249 / .82); backdrop-filter: blur(18px) saturate(1.6);
+    box-shadow: 0 10px 40px -18px rgb(14 26 54 / .35), inset 0 0 0 1px rgb(14 26 54 / .06);
+  }
+</style>

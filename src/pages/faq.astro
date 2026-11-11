@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Faq from '../components/Faq.astro';
+import Cta from '../components/Cta.astro';
+import { FAQ } from '../data/site';
+const schema = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: FAQ.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) };
+---
+<Base
+  title="Вопросы об аренде инвалидной коляски — залог, сроки, доставка"
+  description="Ответы на частые вопросы о прокате инвалидных колясок в Москве: нужен ли залог, минимальный срок, доставка, дезинфекция, замена и продление аренды."
+  crumbs={[{ name: 'Вопросы и ответы', href: '/faq/' }]}
+  schema={[schema]}
+>
+  <PageHead eyebrow="FAQ" title="Вопросы и ответы об аренде" />
+  <div class="-mt-16"><Faq title="Всё, что спрашивают чаще всего" /></div>
+  <Cta />
+</Base>

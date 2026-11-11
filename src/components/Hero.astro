@@ -1,0 +1,142 @@
+---
+import Icon from './Icon.astro';
+import { SITE, PRICES, fmt } from '../data/site';
+const views = [
+  { src: '/img/chair-front.webp', label: 'Спереди' },
+  { src: '/img/chair-side.webp', label: 'Сбоку' },
+  { src: '/img/chair-back.webp', label: 'Сзади' },
+];
+---
+<section class="relative isolate overflow-hidden bg-ink text-white" data-hero>
+  <!-- фон: свечения + сетка -->
+  <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+    <div class="absolute -top-40 -left-40 size-[620px] rounded-full bg-[#2b4dbb] opacity-50 blur-[140px]"></div>
+    <div class="absolute right-[-10%] bottom-[-30%] size-[700px] rounded-full bg-coral opacity-25 blur-[160px]"></div>
+    <div class="absolute inset-0 opacity-[.07] [background-image:linear-gradient(white_1px,transparent_1px),linear-gradient(90deg,white_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(ellipse_at_70%_40%,black,transparent_70%)]"></div>
+  </div>
+
+  <div class="container-x grid min-h-[100svh] items-center gap-6 pt-28 pb-24 lg:grid-cols-[1.05fr_1fr] lg:pt-24 lg:pb-16">
+    <div class="relative z-10">
+      <p class="hero-in inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-[13px] font-bold ring-1 ring-white/15 backdrop-blur" style="--d:0ms">
+        <span class="relative flex size-2"><span class="absolute inline-flex size-full animate-ping rounded-full bg-mint opacity-75"></span><span class="relative inline-flex size-2 rounded-full bg-mint"></span></span>
+        Свободные кресла есть · {SITE.city}
+      </p>
+      <h1 class="hero-in mt-5 text-[34px] leading-[1.06] font-semibold sm:text-[46px] lg:text-[62px]" style="--d:80ms">
+        Инвалидная коляска <span class="relative whitespace-nowrap text-coral">напрокат<svg class="absolute -bottom-2 left-0 w-full" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true"><path class="draw" d="M2 9c40-6 120-8 196-3" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round"/></svg></span> в&nbsp;Москве
+      </h1>
+      <p class="hero-in mt-6 max-w-[520px] text-[17px] leading-relaxed text-white/75 md:text-lg" style="--d:160ms">
+        Без залога, от {PRICES.minDays} дней. Чистое кресло после дезинфекции — заберите сами бесплатно или привезём курьером. Если не подойдёт — бесплатно заменим.
+      </p>
+
+      <ul class="hero-in mt-7 flex flex-wrap gap-2.5" style="--d:240ms">
+        {['Без залога', 'День заказа — в подарок', 'Самовывоз бесплатно'].map((t) => (
+          <li class="flex items-center gap-2 rounded-full bg-white/[.07] px-3.5 py-2 text-[14px] font-semibold ring-1 ring-white/10"><Icon name="check" class="size-4 text-mint" />{t}</li>
+        ))}
+      </ul>
+
+      <div class="hero-in mt-9 flex flex-col gap-3 sm:flex-row" style="--d:320ms">
+        <a href="#podbor" class="btn btn-primary !px-8 !py-4.5 text-base">Подобрать кресло за 1 минуту <Icon name="arrow" class="size-5" /></a>
+        <a href={SITE.phoneHref} class="btn btn-ghost !py-4.5 text-base"><Icon name="phone" class="size-5" />{SITE.phone}</a>
+      </div>
+
+      <div class="hero-in mt-10 flex items-end gap-8" style="--d:400ms">
+        <div>
+          <p class="text-[13px] text-white/55">от</p>
+          <p class="font-display text-2xl font-semibold whitespace-nowrap sm:text-3xl">{PRICES.monthPerDay} ₽<span class="text-base text-white/55"> / день</span></p>
+        </div>
+        <div class="h-10 w-px bg-white/15"></div>
+        <div>
+          <p class="text-[13px] text-white/55">{PRICES.minDays} дня</p>
+          <p class="font-display text-2xl font-semibold whitespace-nowrap sm:text-3xl">{fmt(PRICES.minPrice)}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3D-сцена -->
+    <div class="relative h-[440px] sm:h-[520px] lg:h-[640px]" data-stage>
+      <canvas class="wheel-canvas absolute inset-[-12%] h-[124%] w-[124%]" data-wheel aria-hidden="true"></canvas>
+      <div class="absolute inset-0 grid place-items-center [perspective:1200px]">
+        <div class="chair-3d relative w-[78%] max-w-[520px] cursor-grab touch-pan-y select-none active:cursor-grabbing" data-chair role="img" aria-label="Инвалидная коляска Ortonica — покрутите, чтобы посмотреть с разных сторон">
+          {views.map((v, i) => (
+            <img src={v.src} alt="" width="648" height="600" draggable="false" fetchpriority={i === 0 ? 'high' : 'low'} loading={i === 0 ? 'eager' : 'lazy'}
+              class:list={['chair-view w-full drop-shadow-[0_40px_40px_rgba(0,0,0,.55)]', i === 0 ? 'relative is-active' : 'absolute inset-0 m-auto']} data-view={i} />
+          ))}
+          <div class="absolute -bottom-6 left-1/2 h-8 w-[70%] -translate-x-1/2 rounded-[50%] bg-black/50 blur-xl" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <!-- плавающие плашки -->
+      <div class="floaty absolute top-[8%] left-0 rounded-2xl bg-white/10 px-4 py-3 ring-1 ring-white/20 backdrop-blur-md sm:left-[2%]" style="animation-delay:-2s">
+        <p class="text-[12px] text-white/60">Перед выдачей</p>
+        <p class="flex items-center gap-1.5 font-bold"><Icon name="sparkle" class="size-4 text-sky" />Дезинфекция и ТО</p>
+      </div>
+      <div class="floaty absolute right-0 bottom-[14%] rounded-2xl bg-white px-4 py-3 text-ink shadow-2xl sm:right-[2%]">
+        <p class="text-[12px] text-muted">Залог</p>
+        <p class="font-display text-xl font-semibold">0 ₽</p>
+      </div>
+
+      <div class="absolute inset-x-0 bottom-0 flex items-center justify-center gap-2" role="tablist" aria-label="Ракурс коляски">
+        {views.map((v, i) => (
+          <button role="tab" aria-selected={i === 0 ? 'true' : 'false'} data-view-btn={i}
+            class="rounded-full px-3.5 py-1.5 text-[13px] font-bold text-white/70 ring-1 ring-white/15 transition-colors aria-selected:bg-white aria-selected:text-ink">{v.label}</button>
+        ))}
+        <span class="ml-2 hidden items-center gap-1.5 text-[12px] text-white/50 sm:flex"><Icon name="rotate" class="size-4" />тяните, чтобы покрутить</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-in { opacity: 0; transform: translateY(24px); animation: heroIn 1s var(--ease-out-expo) forwards; animation-delay: var(--d); }
+  @keyframes heroIn { to { opacity: 1; transform: none; } }
+  .draw { stroke-dasharray: 220; stroke-dashoffset: 220; animation: draw 1.2s .7s var(--ease-out-expo) forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  .wheel-canvas { opacity: 0; transition: opacity 1.4s ease; }
+  .wheel-canvas:global(.is-ready) { opacity: 1; }
+  .chair-3d { transform-style: preserve-3d; transition: transform .6s var(--ease-out-expo); }
+  .chair-view { opacity: 0; transform: rotateY(-50deg) scale(.9); transition: opacity .5s, transform .7s var(--ease-out-expo); }
+  .chair-view.is-active { opacity: 1; transform: none; }
+  .chair-view.is-left { transform: rotateY(50deg) scale(.9); }
+  @media (prefers-reduced-motion: reduce) { .hero-in, .draw { animation: none; opacity: 1; transform: none; stroke-dashoffset: 0; } }
+</style>
+
+<script>
+  const stage = document.querySelector<HTMLElement>('[data-stage]');
+  const chair = document.querySelector<HTMLElement>('[data-chair]');
+  const views = [...document.querySelectorAll<HTMLImageElement>('[data-view]')];
+  const btns = [...document.querySelectorAll<HTMLButtonElement>('[data-view-btn]')];
+  let idx = 0;
+  const show = (n: number, dir = 1) => {
+    const next = (n + views.length) % views.length;
+    views.forEach((v, i) => {
+      v.classList.toggle('is-active', i === next);
+      v.classList.toggle('is-left', i !== next && dir < 0);
+    });
+    btns.forEach((b, i) => b.setAttribute('aria-selected', String(i === next)));
+    idx = next;
+  };
+  btns.forEach((b, i) => b.addEventListener('click', () => show(i, i > idx ? 1 : -1)));
+
+  let startX: number | null = null;
+  chair?.addEventListener('pointerdown', (e) => { startX = e.clientX; chair.setPointerCapture(e.pointerId); });
+  chair?.addEventListener('pointermove', (e) => {
+    if (startX === null) return;
+    const dx = e.clientX - startX;
+    if (Math.abs(dx) > 50) { show(idx + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1); startX = e.clientX; }
+  });
+  chair?.addEventListener('pointerup', () => { startX = null; });
+
+  // параллакс кресла от мыши
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches && matchMedia('(hover: hover)').matches) {
+    addEventListener('pointermove', (e) => {
+      if (!chair || startX !== null) return;
+      const x = e.clientX / innerWidth - 0.5; const y = e.clientY / innerHeight - 0.5;
+      chair.style.transform = `rotateY(${x * 14}deg) rotateX(${-y * 8}deg) translateZ(0)`;
+    }, { passive: true });
+  }
+
+  // 3D-колесо грузим лениво, после первого экрана
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-wheel]');
+  const start = () => import('../scripts/wheel3d').then((m) => canvas && m.mountWheel(canvas)).catch(() => {});
+  if (canvas && stage) ('requestIdleCallback' in window ? requestIdleCallback(start, { timeout: 1200 }) : setTimeout(start, 600));
+</script>

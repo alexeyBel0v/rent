@@ -1,0 +1,21 @@
+---
+// Иллюстрация коляски, пока нет фото модели
+type Props = { class?: string };
+const { class: cls = '' } = Astro.props;
+---
+<svg viewBox="0 0 220 200" class={cls} fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Инвалидная коляска Ottobock">
+  <circle cx="88" cy="128" r="58" stroke-width="6"/>
+  <circle cx="88" cy="128" r="48" stroke-width="2" opacity=".5"/>
+  {Array.from({ length: 12 }).map((_, i) => {
+    const a = (i / 12) * Math.PI * 2;
+    return <line x1={88} y1={128} x2={88 + Math.cos(a) * 48} y2={128 + Math.sin(a) * 48} stroke-width="1.5" opacity=".45" />;
+  })}
+  <circle cx="88" cy="128" r="7" fill="#e5484d" stroke="none"/>
+  <path d="M58 18c6 0 10 4 10 10v62h70" stroke-width="7"/>
+  <path d="M68 60h58l10 30" stroke-width="5"/>
+  <path d="M138 90l22 50h22" stroke-width="6"/>
+  <path d="M182 140l10 4" stroke-width="8" stroke="#e5484d"/>
+  <path d="M150 112v50" stroke-width="5"/>
+  <circle cx="150" cy="172" r="12" stroke-width="5"/>
+  <path d="M68 90h70" stroke-width="10" opacity=".9"/>
+</svg>

@@ -1,0 +1,83 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import ChairArt from '../../components/ChairArt.astro';
+import Calculator from '../../components/Calculator.astro';
+import Quiz from '../../components/Quiz.astro';
+import Faq from '../../components/Faq.astro';
+import { CHAIRS, PRICES, SITE, fmt } from '../../data/site';
+
+export const getStaticPaths = () => CHAIRS.map((chair) => ({ params: { slug: chair.slug }, props: { chair } }));
+const { chair } = Astro.props;
+const product = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: `Аренда инвалидной коляски ${chair.name}`,
+  brand: { '@type': 'Brand', name: chair.brand },
+  description: chair.tagline,
+  ...(chair.images[0] ? { image: chair.images.map((i) => `${SITE.url}${i.src}`) } : {}),
+  offers: {
+    '@type': 'AggregateOffer', priceCurrency: 'RUB', lowPrice: PRICES.monthPerDay, highPrice: PRICES.minPrice, offerCount: 2,
+    availability: 'https://schema.org/InStock', areaServed: 'Москва',
+  },
+};
+---
+<Base
+  title={`${chair.name} — аренда инвалидной коляски в Москве без залога`}
+  description={`Аренда инвалидной коляски ${chair.name} в Москве: ${chair.tagline.toLowerCase()}. Без залога, от ${PRICES.minDays} дней, от ${PRICES.monthPerDay} ₽/день. Доставка и самовывоз.`}
+  keywords={`${chair.brand} аренда, коляска ${chair.name} напрокат, инвалидная коляска ${chair.brand} москва`}
+  crumbs={[{ name: 'Каталог', href: '/katalog/' }, { name: chair.name, href: `/katalog/${chair.slug}/` }]}
+  schema={[product]}
+>
+  <section class="container-x grid gap-10 pt-8 pb-16 lg:grid-cols-[1.1fr_1fr] lg:pt-12">
+    <div class="reveal">
+      <div class="tilt card relative flex aspect-square items-center justify-center overflow-hidden bg-gradient-to-br from-mist to-white" data-tilt="6" data-gallery>
+        {chair.images.length
+          ? chair.images.map((img, i) => <img src={img.src} alt={img.alt} width="648" height="600" loading={i ? 'lazy' : 'eager'} class:list={['pop absolute h-[78%] w-auto object-contain drop-shadow-[0_30px_25px_rgba(14,26,54,.3)] transition-opacity duration-500', i ? 'opacity-0' : '']} data-g={i} />)
+          : <ChairArt class="pop h-[70%] w-auto text-ink" />}
+        <span class="glare"></span>
+      </div>
+      {chair.images.length > 1 && (
+        <div class="mt-4 grid grid-cols-3 gap-3">
+          {chair.images.map((img, i) => (
+            <button class:list={['card grid aspect-[4/3] place-items-center p-2 ring-2 transition-all', i ? 'ring-transparent' : 'ring-coral']} data-thumb={i} aria-label={`Показать фото ${i + 1}`}>
+              <img src={img.src} alt="" class="h-full w-auto object-contain" loading="lazy" />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+    <div class="reveal" style="--d:120ms">
+      <p class="text-[14px] font-bold tracking-wide text-coral uppercase">{chair.brand}</p>
+      <h1 class="mt-2 text-[34px] leading-[1.08] font-semibold md:text-[48px]">{chair.name}</h1>
+      <p class="mt-4 text-lg text-muted">{chair.tagline}</p>
+      <div class="mt-8 grid grid-cols-2 gap-3">
+        <div class="card p-5"><p class="text-[13px] text-muted">{PRICES.minDays} дня</p><p class="font-display text-2xl font-semibold">{fmt(PRICES.minPrice)}</p></div>
+        <div class="rounded-[28px] bg-ink p-5 text-white"><p class="text-[13px] text-white/60">от {PRICES.monthDays} дней</p><p class="font-display text-2xl font-semibold">{PRICES.monthPerDay} ₽/день</p></div>
+      </div>
+      <h2 class="mt-10 text-xl font-semibold">Особенности</h2>
+      <ul class="mt-4 space-y-3">
+        {chair.features.map((f) => <li class="flex gap-3 text-[17px]"><Icon name="check" class="mt-0.5 size-6 shrink-0 text-mint" />{f}</li>)}
+      </ul>
+      <h2 class="mt-8 text-xl font-semibold">Кому подойдёт</h2>
+      <div class="mt-3 flex flex-wrap gap-2">{chair.good.map((g) => <span class="rounded-full bg-mist px-4 py-2 text-[15px] font-semibold">{g}</span>)}</div>
+      <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+        <a href="#podbor" class="btn btn-primary !py-4">Забронировать <Icon name="arrow" class="size-5" /></a>
+        <a href={SITE.phoneHref} class="btn btn-dark !py-4"><Icon name="phone" class="size-5" />{SITE.phone}</a>
+      </div>
+      <p class="mt-4 text-[14px] text-muted">Без залога · дезинфекция перед выдачей · бесплатная замена, если не подойдёт</p>
+    </div>
+  </section>
+  <Calculator />
+  <Quiz />
+  <Faq limit={5} />
+</Base>
+
+<script>
+  const imgs = [...document.querySelectorAll<HTMLElement>('[data-g]')];
+  const thumbs = [...document.querySelectorAll<HTMLElement>('[data-thumb]')];
+  thumbs.forEach((t, i) => t.addEventListener('click', () => {
+    imgs.forEach((im, j) => im.classList.toggle('opacity-0', j !== i));
+    thumbs.forEach((x, j) => { x.classList.toggle('ring-coral', j === i); x.classList.toggle('ring-transparent', j !== i); });
+  }));
+</script>

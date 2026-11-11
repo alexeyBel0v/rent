@@ -1,0 +1,22 @@
+---
+import Base from '../../layouts/Base.astro';
+import Quiz from '../../components/Quiz.astro';
+import { ARTICLES } from '../../data/articles';
+import { SITE } from '../../data/site';
+export const getStaticPaths = () => ARTICLES.map((a) => ({ params: { slug: a.slug }, props: { a } }));
+const { a } = Astro.props;
+const schema = {
+  '@context': 'https://schema.org', '@type': 'Article', headline: a.title, description: a.description,
+  datePublished: a.date, dateModified: a.date, inLanguage: 'ru',
+  author: { '@type': 'Organization', name: SITE.name }, publisher: { '@id': `${SITE.url}/#business` },
+  mainEntityOfPage: `${SITE.url}/stati/${a.slug}/`,
+};
+---
+<Base title={a.metaTitle} description={a.description} keywords={a.keywords} crumbs={[{ name: 'Статьи', href: '/stati/' }, { name: a.title, href: `/stati/${a.slug}/` }]} schema={[schema]}>
+  <article class="container-x max-w-3xl pt-8 pb-10">
+    <h1 class="text-[32px] leading-[1.1] font-semibold md:text-[48px]">{a.title}</h1>
+    <p class="mt-4 text-muted">{a.read} чтения</p>
+    <div class="prose-rwc mt-8" set:html={a.html} />
+  </article>
+  <Quiz />
+</Base>

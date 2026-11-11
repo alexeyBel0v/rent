@@ -1,0 +1,20 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import Icon from '../../components/Icon.astro';
+import { ARTICLES } from '../../data/articles';
+---
+<Base title="Полезные статьи об инвалидных колясках" description="Как выбрать инвалидную коляску, что нужно знать об аренде коляски после операции — советы от сервиса проката в Москве." crumbs={[{ name: 'Статьи', href: '/stati/' }]}>
+  <PageHead eyebrow="Статьи" title="Полезно знать" />
+  <section class="container-x grid gap-6 pb-20 md:grid-cols-2">
+    {ARTICLES.map((a, i) => (
+      <a href={`/stati/${a.slug}/`} class="reveal tilt card group relative block p-8" style={`--d:${i * 100}ms`} data-tilt="6">
+        <p class="pop text-[13px] font-bold text-coral uppercase">{a.read} чтения</p>
+        <h2 class="pop mt-3 text-2xl font-semibold">{a.title}</h2>
+        <p class="mt-3 text-muted">{a.description}</p>
+        <span class="mt-6 inline-flex items-center gap-2 font-bold">Читать <Icon name="arrow" class="size-5 transition-transform group-hover:translate-x-1" /></span>
+        <span class="glare"></span>
+      </a>
+    ))}
+  </section>
+</Base>

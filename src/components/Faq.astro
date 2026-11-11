@@ -1,0 +1,31 @@
+---
+import { FAQ } from '../data/site';
+type Props = { limit?: number; title?: string };
+const { limit = FAQ.length, title = 'Частые вопросы' } = Astro.props;
+const items = FAQ.slice(0, limit);
+---
+<section class="py-20 md:py-28" id="faq">
+  <div class="container-x grid gap-10 lg:grid-cols-[1fr_1.6fr]">
+    <div class="reveal">
+      <span class="eyebrow">Вопросы</span>
+      <h2 class="h2 mt-4">{title}</h2>
+      <p class="mt-4 text-lg text-muted">Не нашли ответ? Позвоните или напишите — ответим за пару минут.</p>
+    </div>
+    <div class="space-y-3">
+      {items.map((f, i) => (
+        <details class="reveal faq card group p-0" style={`--d:${i * 50}ms`} name="faq">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-5 text-lg font-bold md:px-8">
+            {f.q}
+            <span class="grid size-9 shrink-0 place-items-center rounded-full bg-mist transition-transform duration-300 group-open:rotate-45 group-open:bg-coral group-open:text-white" aria-hidden="true">
+              <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+            </span>
+          </summary>
+          <p class="px-6 pb-6 text-[16px] leading-relaxed text-muted md:px-8">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+<style>
+  summary::-webkit-details-marker { display: none; }
+</style>

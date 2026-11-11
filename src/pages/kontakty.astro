@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Icon from '../components/Icon.astro';
+import Quiz from '../components/Quiz.astro';
+import { SITE } from '../data/site';
+const items = [
+  { icon: 'phone', label: 'Телефон', value: SITE.phone, href: SITE.phoneHref },
+  { icon: 'wa', label: 'WhatsApp', value: SITE.whatsapp, href: SITE.whatsappHref },
+  { icon: 'tg', label: 'Telegram-бот', value: '@RentWheelChair_bot', href: SITE.telegramBot },
+  { icon: 'mail', label: 'Почта', value: SITE.email, href: `mailto:${SITE.email}` },
+];
+---
+<Base
+  title="Контакты — прокат инвалидных колясок в Москве"
+  description={`Свяжитесь с нами: ${SITE.phone}, WhatsApp, Telegram. Прокат и аренда инвалидных колясок в Москве без залога.`}
+  crumbs={[{ name: 'Контакты', href: '/kontakty/' }]}
+>
+  <PageHead eyebrow="Контакты" title="Как с нами связаться" lead="Отвечаем быстро. Перезваниваем в течение 15 минут после заявки." />
+  <section class="container-x grid gap-4 pb-6 sm:grid-cols-2 lg:grid-cols-4">
+    {items.map((it, i) => (
+      <a href={it.href} target={it.href.startsWith('http') ? '_blank' : undefined} rel="noopener" class="reveal tilt card group relative p-7" style={`--d:${i * 80}ms`} data-tilt="8">
+        <span class="pop grid size-14 place-items-center rounded-2xl bg-mist text-coral transition-colors group-hover:bg-coral group-hover:text-white"><Icon name={it.icon} class="size-7" /></span>
+        <p class="mt-6 text-[14px] font-bold text-muted">{it.label}</p>
+        <p class="mt-1 text-lg font-bold break-all">{it.value}</p>
+        <span class="glare"></span>
+      </a>
+    ))}
+  </section>
+  <Quiz />
+</Base>

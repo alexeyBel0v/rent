@@ -1,0 +1,16 @@
+---
+type Props = { light?: boolean };
+const { light = false } = Astro.props;
+---
+<a href="/" class="group flex items-center gap-2.5" aria-label="Прокат инвалидных кресел — на главную">
+  <svg viewBox="0 0 40 44" class="h-10 w-9 shrink-0 transition-transform duration-500 group-hover:rotate-[-6deg]" aria-hidden="true">
+    <path d="M20 2l16 6v12c0 10-7 18-16 22C11 38 4 30 4 20V8l16-6z" fill="#e5484d"/>
+    <path d="M20 6.5l12 4.5v9c0 7.6-5.2 13.8-12 17-6.8-3.2-12-9.4-12-17v-9l12-4.5z" fill="#fff"/>
+    <circle cx="19" cy="13" r="2.2" fill="#e5484d"/>
+    <path d="M18 16.5v6.5h6.5l2.5 5.5" stroke="#e5484d" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M15.3 19.5a6 6 0 1 0 8.6 7.3" stroke="#e5484d" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  </svg>
+  <span class:list={['font-display text-[13px] leading-[1.05] font-semibold uppercase tracking-wide', light ? 'text-white' : 'text-ink']}>
+    Прокат<br/>инвалидных кресел
+  </span>
+</a>

@@ -1,0 +1,86 @@
+---
+import Icon from './Icon.astro';
+import { PRICES, fmt, calcPrice } from '../data/site';
+const initial = 7;
+---
+<section id="ceny" class="py-20 md:py-28">
+  <div class="container-x">
+    <div class="reveal max-w-2xl">
+      <span class="eyebrow">Цены</span>
+      <h2 class="h2 mt-4">Посчитайте стоимость аренды</h2>
+      <p class="mt-4 text-lg text-muted">Без залога и скрытых платежей. Чем дольше срок — тем дешевле день.</p>
+    </div>
+
+    <div class="mt-12 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+      <div class="reveal card p-6 md:p-10" data-calc>
+        <div class="flex items-baseline justify-between">
+          <label for="days" class="text-lg font-bold">Срок аренды</label>
+          <p class="font-display text-2xl font-semibold"><output data-days>{initial}</output> <span data-days-word>дней</span></p>
+        </div>
+        <input id="days" type="range" min={PRICES.minDays} max="60" value={initial} step="1" class="mt-6" data-range aria-describedby="calc-total" />
+        <div class="mt-3 flex justify-between text-[13px] text-muted"><span>3 дня</span><span>1 месяц</span><span>2 месяца</span></div>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          {[3, 7, 14, 30, 60].map((d) => <button type="button" class="rounded-full bg-mist px-4 py-2 text-[14px] font-bold transition-colors hover:bg-ink hover:text-white" data-preset={d}>{d === 30 ? 'Месяц' : d === 60 ? '2 месяца' : `${d} дн.`}</button>)}
+        </div>
+
+        <div class="mt-8 flex flex-col gap-6 rounded-3xl bg-ink p-6 text-white md:flex-row md:items-center md:justify-between md:p-8">
+          <div id="calc-total" aria-live="polite">
+            <p class="text-[14px] text-white/60">Итого за аренду</p>
+            <p class="font-display text-4xl font-semibold md:text-5xl" data-total>{fmt(calcPrice(initial))}</p>
+            <p class="mt-1 text-[14px] text-white/60">≈ <span data-perday>{Math.round(calcPrice(initial) / initial)}</span> ₽ в день · день заказа — в подарок</p>
+          </div>
+          <a href="#podbor" class="btn btn-primary shrink-0">Забронировать <Icon name="arrow" class="size-5" /></a>
+        </div>
+        <p class="mt-4 hidden rounded-2xl bg-mint/15 px-4 py-3 text-[14px] font-semibold text-[#137a57]" data-hint></p>
+      </div>
+
+      <div class="grid gap-6">
+        <div class="reveal card p-7" style="--d:100ms">
+          <p class="text-[14px] font-bold text-muted">Короткий срок</p>
+          <p class="mt-2 font-display text-3xl font-semibold">{fmt(PRICES.minPrice)}</p>
+          <p class="mt-1 text-muted">за {PRICES.minDays} дня, далее {fmt(PRICES.perDay)} в день</p>
+        </div>
+        <div class="reveal relative overflow-hidden rounded-[28px] bg-coral p-7 text-white" style="--d:200ms">
+          <div class="absolute -top-10 -right-10 size-40 rounded-full bg-white/15"></div>
+          <p class="text-[14px] font-bold text-white/80">Выгоднее всего</p>
+          <p class="mt-2 font-display text-3xl font-semibold">{PRICES.monthPerDay} ₽ / день</p>
+          <p class="mt-1 text-white/85">при аренде от {PRICES.monthDays} дней — {fmt(PRICES.monthDays * PRICES.monthPerDay)} за месяц</p>
+        </div>
+        <div class="reveal card flex items-center gap-4 p-7" style="--d:300ms">
+          <span class="grid size-12 shrink-0 place-items-center rounded-2xl bg-mist text-coral"><Icon name="shield" /></span>
+          <p class="font-semibold">Залог — 0 ₽. Самовывоз — бесплатно.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { calcPrice, fmt, PRICES } from '../data/site';
+  import { paintRange } from '../scripts/ui';
+  const root = document.querySelector<HTMLElement>('[data-calc]');
+  if (root) {
+    const range = root.querySelector<HTMLInputElement>('[data-range]')!;
+    const $ = (s: string) => root.querySelector<HTMLElement>(s)!;
+    const word = (n: number) => { const a = n % 10, b = n % 100; return a === 1 && b !== 11 ? 'день' : a >= 2 && a <= 4 && (b < 10 || b >= 20) ? 'дня' : 'дней'; };
+    const update = () => {
+      const d = Number(range.value);
+      const total = calcPrice(d);
+      $('[data-days]').textContent = String(d);
+      $('[data-days-word]').textContent = word(d);
+      $('[data-total]').textContent = fmt(total);
+      $('[data-perday]').textContent = String(Math.round(total / d));
+      const hint = $('[data-hint]');
+      const month = PRICES.monthDays * PRICES.monthPerDay;
+      if (d < PRICES.monthDays && total >= month) {
+        hint.textContent = `Совет: тариф на ${PRICES.monthDays} дней обойдётся в ${fmt(month)} — это выгоднее.`;
+        hint.classList.remove('hidden');
+      } else hint.classList.add('hidden');
+      paintRange(range);
+    };
+    range.addEventListener('input', update);
+    root.querySelectorAll<HTMLButtonElement>('[data-preset]').forEach((b) => b.addEventListener('click', () => { range.value = b.dataset.preset!; update(); }));
+    update();
+  }
+</script>

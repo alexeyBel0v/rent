@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Calculator from '../components/Calculator.astro';
+import Quiz from '../components/Quiz.astro';
+import Faq from '../components/Faq.astro';
+import Cta from '../components/Cta.astro';
+import { PRICES, fmt } from '../data/site';
+const rows = [
+  [`${PRICES.minDays} дня`, fmt(PRICES.minPrice)],
+  ['7 дней', fmt(PRICES.minPrice + 4 * PRICES.perDay)],
+  ['14 дней', fmt(PRICES.minPrice + 11 * PRICES.perDay)],
+  [`${PRICES.monthDays} дней`, fmt(PRICES.monthDays * PRICES.monthPerDay)],
+  ['60 дней', fmt(60 * PRICES.monthPerDay)],
+];
+---
+<Base
+  title="Цены на аренду инвалидной коляски в Москве — от 200 ₽ в день"
+  description={`Стоимость проката инвалидной коляски: ${PRICES.minDays} дня — ${fmt(PRICES.minPrice)}, далее ${PRICES.perDay} ₽/день, от 30 дней — ${PRICES.monthPerDay} ₽/день. Без залога. Калькулятор стоимости онлайн.`}
+  keywords="аренда инвалидной коляски цена, сколько стоит аренда инвалидной коляски, прокат инвалидной коляски стоимость, инвалидная коляска посуточно"
+  crumbs={[{ name: 'Цены', href: '/ceny/' }]}
+>
+  <PageHead eyebrow="Цены" title="Сколько стоит аренда инвалидной коляски" lead="Платите только за аренду: залога нет, день заказа — в подарок, самовывоз бесплатный." />
+  <section class="container-x">
+    <div class="reveal card overflow-hidden">
+      <table class="w-full text-left text-[17px]">
+        <caption class="sr-only">Примеры стоимости аренды</caption>
+        <thead class="bg-ink text-white"><tr><th class="px-6 py-4 md:px-8">Срок</th><th class="px-6 py-4 md:px-8">Стоимость</th></tr></thead>
+        <tbody>{rows.map(([a, b]) => <tr class="border-t border-ink/5"><td class="px-6 py-4 md:px-8">{a}</td><td class="px-6 py-4 font-bold md:px-8">{b}</td></tr>)}</tbody>
+      </table>
+    </div>
+    <p class="mt-4 text-[14px] text-muted">Доставка курьером оплачивается отдельно по тарифам Яндекс.Доставки. Самовывоз — бесплатно.</p>
+  </section>
+  <Calculator />
+  <Quiz />
+  <Faq limit={4} />
+  <Cta />
+</Base>
