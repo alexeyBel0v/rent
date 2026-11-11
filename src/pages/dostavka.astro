@@ -1,32 +1,143 @@
 ---
 import Base from '../layouts/Base.astro';
-import PageHead from '../components/PageHead.astro';
-import Sections from '../components/Sections.astro';
+import Icon from '../components/Icon.astro';
 import Quiz from '../components/Quiz.astro';
 import Cta from '../components/Cta.astro';
 import { SITE } from '../data/site';
+
+const flow = [
+  { icon: 'phone', t: 'Звонок или заявка', d: 'Подбираем коляску по росту, весу и размерам дверей. Согласуем адрес и удобное окно.' },
+  { icon: 'sparkle', t: 'Готовим коляску', d: 'Техобслуживание и дезинфекция. Настраиваем подножки под рост.' },
+  { icon: 'truck', t: 'Привозим к двери', d: 'Курьер Яндекс.Доставки привозит коляску в выбранное окно.' },
+  { icon: 'user', t: 'Пользуетесь', d: 'Если что-то не так — заменим бесплатно. Продлить можно по звонку.' },
+  { icon: 'box', t: 'Возврат', d: 'Договариваемся о дне — курьер забирает коляску. Или привозите сами.' },
+];
+const checklist = [
+  'Чистая коляска после ТО и дезинфекции',
+  'Подножки, настроенные под рост',
+  'Инструкция: как складывать и пользоваться тормозами',
+  'Телефон для связи на всё время аренды',
+];
 ---
 <Base
-  title="Доставка инвалидной коляски по Москве — самовывоз бесплатно"
-  description={`Доставка и возврат инвалидной коляски по Москве через Яндекс.Доставку. Время доставки: ${SITE.deliveryHours}. Самовывоз — бесплатно.`}
-  keywords="доставка инвалидной коляски москва, аренда инвалидной коляски с доставкой, привезти инвалидную коляску на дом"
+  title="Доставка инвалидной коляски по Москве — к двери или самовывоз бесплатно"
+  description={`Доставка и возврат инвалидной коляски по Москве курьером Яндекс.Доставки. Окна доставки: ${SITE.deliveryHours}. Самовывоз — бесплатно. Без залога.`}
+  keywords="доставка инвалидной коляски москва, аренда инвалидной коляски с доставкой, привезти инвалидную коляску на дом, инвалидная коляска напрокат с доставкой"
   crumbs={[{ name: 'Доставка', href: '/dostavka/' }]}
 >
-  <PageHead eyebrow="Доставка и возврат" title="Привезём коляску к двери или заберёте сами" lead="Отправляем и забираем кресло курьером — не нужно никуда ехать, особенно когда человек только после больницы." />
-  <section class="container-x prose-rwc max-w-3xl pb-4">
-    <h2>Самовывоз</h2>
-    <p>Бесплатно. При получении сотрудник покажет, как раскладывать и складывать кресло, пользоваться тормозами и подножками.</p>
-    <h2>Доставка курьером</h2>
-    <p>Доставляем и забираем кресло через Яндекс.Доставку. Стоимость доставки и возврата рассчитывается по тарифам сервиса и оплачивается клиентом — назовём сумму заранее, при звонке.</p>
-    <ul>
-      <li>Время доставки: {SITE.deliveryHours}</li>
-      <li>Коляска приезжает чистой, после ТО и дезинфекции</li>
-      <li>Если кресло не подошло — бесплатно заменим</li>
-    </ul>
-    <h2>Возврат и продление</h2>
-    <p>За день до окончания срока напишите или позвоните: договоримся о возврате или продлим аренду без лишних визитов.</p>
+  <!-- шапка -->
+  <header class="container-x pt-8 pb-12 md:pt-12">
+    <span class="eyebrow">Доставка и возврат</span>
+    <h1 class="mt-4 max-w-4xl text-[34px] leading-[1.06] font-semibold md:text-[60px]">Коляска приедет <span class="text-coral">к вашей двери</span></h1>
+    <p class="mt-5 max-w-2xl text-lg text-muted md:text-xl">Не нужно никуда ехать, особенно когда человек только после больницы. Или заберите сами — это бесплатно.</p>
+  </header>
+
+  <!-- два способа -->
+  <section class="container-x">
+    <div class="grid gap-5 lg:grid-cols-2">
+      <article class="reveal tilt relative overflow-hidden rounded-[32px] bg-ink p-7 text-white md:p-10" data-tilt="5">
+        <div class="pointer-events-none absolute -right-20 -bottom-20 size-72 rounded-full bg-[#2b4dbb]/60 blur-3xl" aria-hidden="true"></div>
+        <div class="relative flex items-start justify-between gap-4">
+          <span class="pop grid size-16 place-items-center rounded-2xl bg-coral"><Icon name="truck" class="size-8" /></span>
+          <span class="rounded-full bg-white/10 px-3 py-1.5 text-[13px] font-bold">Удобнее всего</span>
+        </div>
+        <h2 class="pop relative mt-8 text-3xl font-semibold md:text-4xl">Курьер до двери</h2>
+        <p class="relative mt-3 text-lg text-white/70">Привезём и заберём через Яндекс.Доставку — по всей Москве.</p>
+        <ul class="relative mt-6 space-y-2.5 text-white/85">
+          <li class="flex gap-3"><Icon name="check" class="size-5 shrink-0 text-mint" />В удобное окно — утром или вечером</li>
+          <li class="flex gap-3"><Icon name="check" class="size-5 shrink-0 text-mint" />Доставка и возврат — в одну заявку</li>
+          <li class="flex gap-3"><Icon name="check" class="size-5 shrink-0 text-mint" />Стоимость называем заранее, по тарифу сервиса</li>
+        </ul>
+        <p class="relative mt-8 border-t border-white/10 pt-5 text-[15px] text-white/60">Стоимость доставки — по тарифам Яндекс.Доставки, оплачивает клиент</p>
+      </article>
+
+      <article class="reveal tilt card relative overflow-hidden p-7 md:p-10" style="--d:120ms" data-tilt="5">
+        <div class="relative flex items-start justify-between gap-4">
+          <span class="pop grid size-16 place-items-center rounded-2xl bg-mist text-coral"><Icon name="pin" class="size-8" /></span>
+          <span class="rounded-full bg-mint/15 px-3 py-1.5 text-[13px] font-bold text-[#137a57]">Бесплатно</span>
+        </div>
+        <h2 class="pop mt-8 text-3xl font-semibold md:text-4xl">Самовывоз</h2>
+        <p class="mt-3 text-lg text-muted">Приезжаете за коляской — на месте всё покажем и подстроим.</p>
+        <ul class="mt-6 space-y-2.5">
+          <li class="flex gap-3"><Icon name="check" class="size-5 shrink-0 text-mint" />Покажем, как складывать и раскладывать</li>
+          <li class="flex gap-3"><Icon name="check" class="size-5 shrink-0 text-mint" />Подгоним подножки под рост</li>
+          <li class="flex gap-3"><Icon name="check" class="size-5 shrink-0 text-mint" />Коляска помещается в багажник легковушки</li>
+        </ul>
+        <p class="mt-8 border-t border-ink/10 pt-5 font-display text-3xl font-semibold">0 ₽</p>
+      </article>
+    </div>
   </section>
-  <Sections only={['steps']} />
+
+  <!-- окна доставки -->
+  <section class="container-x py-20 md:py-24">
+    <div class="reveal max-w-2xl">
+      <span class="eyebrow">Когда привезём</span>
+      <h2 class="h2 mt-4">Два окна доставки — до и после работы</h2>
+    </div>
+    <div class="mt-10 grid gap-5 md:grid-cols-2">
+      <div class="reveal relative overflow-hidden rounded-[32px] bg-gradient-to-br from-[#ffe6c7] via-[#ffd6cf] to-[#ffc4c0] p-8 md:p-10">
+        <div class="absolute -top-10 -right-10 size-48 rounded-full bg-white/40 blur-2xl" aria-hidden="true"></div>
+        <span class="relative grid size-14 place-items-center rounded-2xl bg-white/70 text-[#d97706]"><Icon name="sun" class="size-7" /></span>
+        <p class="relative mt-6 text-[15px] font-bold text-ink/60">Утро</p>
+        <p class="relative font-display text-4xl font-semibold whitespace-nowrap lg:text-5xl">06:00–07:00</p>
+        <p class="relative mt-3 text-ink/70">Успеете получить коляску до работы или до выписки из больницы.</p>
+      </div>
+      <div class="reveal relative overflow-hidden rounded-[32px] bg-gradient-to-br from-[#1a2a52] via-[#13204a] to-[#0e1a36] p-8 text-white md:p-10" style="--d:120ms">
+        <div class="absolute -top-10 -right-10 size-48 rounded-full bg-sky/20 blur-2xl" aria-hidden="true"></div>
+        <span class="relative grid size-14 place-items-center rounded-2xl bg-white/10 text-sky"><Icon name="moon" class="size-7" /></span>
+        <p class="relative mt-6 text-[15px] font-bold text-white/60">Вечер</p>
+        <p class="relative font-display text-4xl font-semibold whitespace-nowrap lg:text-5xl">19:00–22:00</p>
+        <p class="relative mt-3 text-white/70">Удобно, если днём вы на работе или в больнице у родственника.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- как всё происходит -->
+  <section class="bg-paper py-20 md:py-24">
+    <div class="container-x">
+      <div class="reveal max-w-2xl">
+        <span class="eyebrow">Как это происходит</span>
+        <h2 class="h2 mt-4">От звонка до возврата</h2>
+      </div>
+      <ol class="relative mt-12 grid gap-4 md:grid-cols-5">
+        <div class="absolute top-8 right-[10%] left-[10%] hidden h-0.5 bg-[repeating-linear-gradient(90deg,var(--color-coral)_0_10px,transparent_10px_20px)] md:block" aria-hidden="true"></div>
+        {flow.map((s, i) => (
+          <li class="reveal relative md:text-center" style={`--d:${i * 100}ms`}>
+            <div class="flex items-center gap-4 md:block">
+              <span class="relative grid size-16 shrink-0 place-items-center rounded-full bg-ink text-white ring-8 ring-paper md:mx-auto">
+                <Icon name={s.icon} class="size-7" />
+                <span class="absolute -top-1 -right-1 grid size-6 place-items-center rounded-full bg-coral text-[12px] font-bold">{i + 1}</span>
+              </span>
+              <p class="text-lg font-bold md:mt-5">{s.t}</p>
+            </div>
+            <p class="mt-2 pl-20 text-[15px] text-muted md:pl-0">{s.d}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- что получите + продление -->
+  <section class="container-x grid gap-5 py-20 md:py-24 lg:grid-cols-[1.2fr_1fr]">
+    <div class="reveal card p-7 md:p-10">
+      <span class="eyebrow">В комплекте</span>
+      <h2 class="mt-4 text-2xl font-semibold md:text-3xl">Что вы получите вместе с коляской</h2>
+      <ul class="mt-6 grid gap-3 sm:grid-cols-2">
+        {checklist.map((c) => <li class="flex gap-3 rounded-2xl bg-cream p-4 text-[15px] font-semibold"><Icon name="check" class="size-5 shrink-0 text-mint" />{c}</li>)}
+      </ul>
+    </div>
+    <div class="reveal relative overflow-hidden rounded-[32px] bg-coral p-7 text-white md:p-10" style="--d:120ms">
+      <div class="absolute -right-16 -bottom-16 size-56 rounded-full bg-white/15" aria-hidden="true"></div>
+      <span class="relative grid size-14 place-items-center rounded-2xl bg-white/20"><Icon name="calendar" class="size-7" /></span>
+      <h2 class="relative mt-6 text-2xl font-semibold md:text-3xl">Нужно дольше? Продлим по звонку</h2>
+      <p class="relative mt-3 text-white/85">Позвоните или напишите в Telegram до конца срока — продлим без визитов. При аренде от месяца день стоит всего 200 ₽.</p>
+      <div class="relative mt-7 flex flex-wrap gap-2">
+        <a href={SITE.phoneHref} class="btn bg-white text-ink hover:bg-cream"><Icon name="phone" class="size-5" />{SITE.phone}</a>
+        <a href={SITE.telegramBot} target="_blank" rel="noopener" class="btn btn-ghost"><Icon name="tg" class="size-5" />Telegram</a>
+      </div>
+    </div>
+  </section>
+
   <Quiz />
   <Cta />
 </Base>

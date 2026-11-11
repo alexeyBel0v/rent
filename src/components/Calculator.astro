@@ -1,6 +1,8 @@
 ---
 import Icon from './Icon.astro';
 import { PRICES, fmt, calcPrice } from '../data/site';
+type Props = { simple?: boolean };
+const { simple = false } = Astro.props;
 const initial = 7;
 ---
 <section id="ceny" class="py-20 md:py-28">
@@ -11,7 +13,7 @@ const initial = 7;
       <p class="mt-4 text-lg text-muted">Без залога и скрытых платежей. Чем дольше срок — тем дешевле день.</p>
     </div>
 
-    <div class="mt-12 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+    <div class:list={['mt-12 grid gap-6', !simple && 'lg:grid-cols-[1.4fr_1fr]']}>
       <div class="reveal card p-6 md:p-10" data-calc>
         <div class="flex items-baseline justify-between">
           <label for="days" class="text-lg font-bold">Срок аренды</label>
@@ -35,7 +37,7 @@ const initial = 7;
         <p class="mt-4 hidden rounded-2xl bg-mint/15 px-4 py-3 text-[14px] font-semibold text-[#137a57]" data-hint></p>
       </div>
 
-      <div class="grid gap-6">
+      {!simple && <div class="grid gap-6">
         <div class="reveal card p-7" style="--d:100ms">
           <p class="text-[14px] font-bold text-muted">Короткий срок</p>
           <p class="mt-2 font-display text-3xl font-semibold">{fmt(PRICES.minPrice)}</p>
@@ -51,7 +53,7 @@ const initial = 7;
           <span class="grid size-12 shrink-0 place-items-center rounded-2xl bg-mist text-coral"><Icon name="shield" /></span>
           <p class="font-semibold">Залог — 0 ₽. Самовывоз — бесплатно.</p>
         </div>
-      </div>
+      </div>}
     </div>
   </div>
 </section>
