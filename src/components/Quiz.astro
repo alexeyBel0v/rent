@@ -4,8 +4,9 @@ import { SITE, PRICES, calcPrice, fmt } from '../data/site';
 const questions = [
   { key: 'days', label: 'На сколько дней нужна коляска?', min: PRICES.minDays, max: 90, value: 14, unit: 'дн.', hint: 'Можно продлить в любой момент — просто позвоните', price: true },
   { key: 'weight', label: 'Вес человека', min: 30, max: 150, value: 75, unit: 'кг', hint: 'От веса зависит ширина сиденья и прочность рамы' },
-  { key: 'height', label: 'Рост', min: 110, max: 210, value: 170, unit: 'см', hint: 'Подберём высоту спинки и длину подножек' },
-  { key: 'door', label: 'Ширина самой узкой двери', min: 50, max: 100, value: 70, unit: 'см', hint: 'Чаще всего это ванная или туалет', link: true },
+  { key: 'height', label: 'Рост', min: 110, max: 210, value: 170, unit: 'см', hint: 'Подберём коляску по росту' },
+  { key: 'hips', label: 'Ширина бёдер', min: 30, max: 60, value: 40, unit: 'см', hint: 'Сидя на твёрдом стуле, приставьте к бёдрам с двух сторон книги и измерьте расстояние между ними', link: true },
+  { key: 'door', label: 'Ширина самой узкой двери', min: 50, max: 100, value: 70, unit: 'см', hint: 'Чаще всего это ванная или туалет' },
   { key: 'lift', label: 'Ширина двери лифта', min: 50, max: 110, value: 80, unit: 'см', hint: 'Если лифта нет или первый этаж — оставьте как есть' },
 ];
 const total = questions.length;
@@ -20,13 +21,13 @@ const total = questions.length;
         <div class="reveal">
           <span class="eyebrow">Подбор за 1 минуту</span>
           <h2 class="h2 mt-4">Ответьте на {total} вопросов — подберём коляску</h2>
-          <p class="mt-4 text-lg text-white/70">Чтобы коляска проходила в двери и лифт, была удобной и не стоила лишнего. Перезвоним в течение 15 минут.</p>
+          <p class="mt-4 text-lg text-white/70">Чтобы коляска проходила в двери и лифт и была удобной. Перезвоним в течение 15 минут.</p>
           <ul class="mt-8 space-y-3 text-white/85">
             <li class="flex gap-3"><Icon name="check" class="size-6 shrink-0 text-mint" />Бесплатная консультация</li>
-            <li class="flex gap-3"><Icon name="check" class="size-6 shrink-0 text-mint" />Не подошло — заменим бесплатно</li>
+            <li class="flex gap-3"><Icon name="check" class="size-6 shrink-0 text-mint" />Фиксированные цены, без скрытых платежей</li>
             <li class="flex gap-3"><Icon name="check" class="size-6 shrink-0 text-mint" />Ничего не нужно платить заранее</li>
           </ul>
-          <a href="/kak-izmerit/" class="mt-8 inline-flex items-center gap-2 rounded-2xl bg-white/10 px-4 py-3 font-bold ring-1 ring-white/15 hover:bg-white/15"><Icon name="ruler" class="size-5 text-sky" />Памятка: как снять мерки для коляски</a>
+          <a href="/kak-izmerit/" class="mt-8 inline-flex items-center gap-2 rounded-2xl bg-white/10 px-4 py-3 font-bold ring-1 ring-white/15 hover:bg-white/15"><Icon name="ruler" class="size-5 text-sky" />Памятка: как измерить ширину бёдер</a>
         </div>
 
         <form class="reveal rounded-[28px] bg-white p-6 text-ink md:p-8" data-quiz novalidate style="--d:120ms">
@@ -126,7 +127,7 @@ const total = questions.length;
       const text = [
         'Здравствуйте! Хочу арендовать инвалидную коляску.',
         `Срок: ${days} дн. (≈ ${fmt(calcPrice(days))})`,
-        `Вес: ${d.get('weight')} кг, рост: ${d.get('height')} см`,
+        `Вес: ${d.get('weight')} кг, рост: ${d.get('height')} см, ширина бёдер: ${d.get('hips')} см`,
         `Дверь: ${d.get('door')} см, лифт: ${d.get('lift')} см`,
         `Имя: ${d.get('name') || '—'}, телефон: +7${digits}`,
       ].join('\n');

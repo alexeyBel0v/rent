@@ -23,7 +23,7 @@ const product = {
 };
 ---
 <Base
-  title={`${chair.name} напрокат — аренда инвалидной коляски${chair.german ? ' из Германии' : ''} в Москве`}
+  title={`${chair.name} напрокат — аренда инвалидной коляски в Москве`}
   description={`Аренда инвалидной коляски ${chair.name} в Москве: ${chair.tagline.toLowerCase()}. Без залога, от ${PRICES.minDays} дней, от ${PRICES.monthPerDay} ₽/день. Доставка и самовывоз.`}
   keywords={`${chair.brand} аренда, коляска ${chair.name} напрокат, инвалидная коляска ${chair.brand} москва`}
   crumbs={[{ name: 'Каталог', href: '/katalog/' }, { name: chair.name, href: `/katalog/${chair.slug}/` }]}
@@ -65,7 +65,7 @@ const product = {
         <a href="#podbor" class="btn btn-primary !py-4">Забронировать <Icon name="arrow" class="size-5" /></a>
         <a href={SITE.phoneHref} class="btn btn-dark !py-4"><Icon name="phone" class="size-5" />{SITE.phone}</a>
       </div>
-      <p class="mt-4 text-[14px] text-muted">Без залога · дезинфекция перед выдачей · бесплатная замена, если не подойдёт</p>
+      <p class="mt-4 text-[14px] text-muted">Без залога · дезинфекция перед выдачей · фиксированная цена</p>
     </div>
   </section>
   <Calculator />
