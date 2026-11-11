@@ -9,29 +9,29 @@ import { PRICES, SITE, CHAIRS, calcPrice, fmt } from '../data/site';
 
 const tariffs = [
   {
-    name: 'Короткий',
-    term: `${PRICES.minDays} дня`,
+    name: '3 дня',
+    term: 'минимальный срок',
     price: fmt(PRICES.minPrice),
-    per: `за ${PRICES.minDays} дня`,
-    note: `далее ${PRICES.perDay} ₽ в день`,
-    for: 'Выписка из больницы, поездка, визит к врачу',
+    per: `≈ ${Math.round(PRICES.minPrice / PRICES.minDays)} ₽ в день`,
+    note: 'Выписка, поездка, визит к врачу',
+    for: 'Когда коляска нужна на пару дней',
     accent: false,
   },
   {
-    name: 'Месяц и дольше',
-    term: `от ${PRICES.monthDays} дней`,
-    price: `${PRICES.monthPerDay} ₽`,
-    per: 'в день',
-    note: `${fmt(PRICES.monthDays * PRICES.monthPerDay)} за 30 дней`,
+    name: 'Месяц',
+    term: `${PRICES.monthDays} дней`,
+    price: fmt(PRICES.monthPrice),
+    per: `${PRICES.monthPerDay} ₽ в день`,
+    note: `Дольше месяца — ${PRICES.monthPerDay} ₽ за каждый день`,
     for: 'Реабилитация после операции или перелома',
     accent: true,
   },
   {
-    name: 'Неделя — две',
-    term: '4–29 дней',
-    price: `${PRICES.perDay} ₽`,
-    per: 'в день',
-    note: `после первых ${PRICES.minDays} дней`,
+    name: 'Неделя',
+    term: `${PRICES.weekDays} дней`,
+    price: fmt(PRICES.weekPrice),
+    per: `${Math.round(PRICES.weekPrice / PRICES.weekDays)} ₽ в день`,
+    note: `Дольше недели — +${PRICES.perDay} ₽ за день`,
     for: 'Восстановление после травмы, приезд родственников',
     accent: false,
   },
@@ -44,9 +44,9 @@ const included = [
   { icon: 'user', t: 'Инструктаж', d: 'Покажем, как пользоваться' },
   { icon: 'gift', t: 'День заказа', d: 'В подарок' },
 ];
-const terms = [3, 7, 14, 30, 60, 90];
-const label = (d: number) => (d === 3 ? '3 дня' : d === 7 ? 'Неделя' : d === 14 ? '2 недели' : d === 30 ? 'Месяц' : d === 60 ? '2 месяца' : '3 месяца');
-const maxPer = calcPrice(7) / 7;
+const terms = [3, 7, 14, 21, 30, 60];
+const label = (d: number) => (d === 3 ? '3 дня' : d === 7 ? 'Неделя' : d === 14 ? '2 недели' : d === 21 ? '3 недели' : d === 30 ? 'Месяц' : '2 месяца');
+const maxPer = calcPrice(3) / 3;
 const offers = {
   '@context': 'https://schema.org',
   '@type': 'OfferCatalog',
@@ -55,8 +55,8 @@ const offers = {
 };
 ---
 <Base
-  title="Цены на аренду инвалидной коляски в Москве — от 200 ₽ в день, без залога"
-  description={`Стоимость проката инвалидной коляски Ottobock, Meyra: ${PRICES.minDays} дня — ${fmt(PRICES.minPrice)}, далее ${PRICES.perDay} ₽/день, от 30 дней — ${PRICES.monthPerDay} ₽/день. Без залога. Калькулятор онлайн.`}
+  title="Цены на аренду инвалидной коляски в Москве — от 170 ₽ в день, без залога"
+  description={`Стоимость аренды инвалидной коляски в Москве: ${PRICES.minDays} дня — ${fmt(PRICES.minPrice)}, неделя — ${fmt(PRICES.weekPrice)}, месяц — ${fmt(PRICES.monthPrice)}. Фиксированные цены, без залога. Калькулятор онлайн.`}
   keywords="аренда инвалидной коляски цена, сколько стоит аренда инвалидной коляски, прокат инвалидной коляски стоимость, инвалидная коляска посуточно, аренда коляски на месяц цена"
   crumbs={[{ name: 'Цены', href: '/ceny/' }]}
   schema={[offers]}
@@ -124,7 +124,7 @@ const offers = {
         );
       })}
     </div>
-    <p class="mt-4 text-[14px] text-muted">Полоска показывает цену одного дня: чем короче, тем выгоднее.</p>
+    <p class="mt-4 text-[14px] text-muted">Полоска — цена одного дня. Промежуточные сроки: 4–7 дней — как неделя; 8–29 дней — неделя + {PRICES.perDay} ₽ за каждый день, но не дороже месяца; от 30 дней — {PRICES.monthPerDay} ₽ в день.</p>
   </section>
 
   <!-- что входит -->

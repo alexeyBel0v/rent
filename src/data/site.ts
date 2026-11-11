@@ -20,19 +20,23 @@ export const SITE = {
   },
 };
 
-// Тарифы (как на текущем сайте)
+// Тарифы — фиксированные, одинаковые для всех моделей
 export const PRICES = {
   minDays: 3,
-  minPrice: 1500, // 3 дня
-  perDay: 300, // каждый следующий день
+  minPrice: 1300, // 1–3 дня
+  weekDays: 7,
+  weekPrice: 2100, // 4–7 дней
+  perDay: 140, // каждый день сверх недели (8–29 дней), но не дороже месяца
   monthDays: 30,
-  monthPerDay: 200, // при аренде на 30 дней и больше
+  monthPrice: 5100, // 30 дней
+  monthPerDay: 170, // от 30 дней — за каждый день
 };
 
 export const calcPrice = (days: number) => {
-  if (days >= PRICES.monthDays) return days * PRICES.monthPerDay;
   if (days <= PRICES.minDays) return PRICES.minPrice;
-  return PRICES.minPrice + (days - PRICES.minDays) * PRICES.perDay;
+  if (days <= PRICES.weekDays) return PRICES.weekPrice;
+  if (days < PRICES.monthDays) return Math.min(PRICES.weekPrice + (days - PRICES.weekDays) * PRICES.perDay, PRICES.monthPrice);
+  return days * PRICES.monthPerDay;
 };
 
 export const fmt = (n: number) => n.toLocaleString('ru-RU').replace(/,/g, ' ') + ' ₽';
@@ -165,7 +169,7 @@ export const FAQ = [
   { q: 'Нужен ли залог?', a: 'Нет, залог мы не берём. Оплачиваете только аренду по тарифу.' },
   { q: 'Какие коляски у вас есть?', a: 'Ottobock Старт и Meyra Eurochair² (Германия), облегчённая Ortonica и прочная Флагман. Подберём модель под рост, вес и ширину ваших дверей.' },
   { q: 'Цена зависит от модели?', a: 'Нет. Цены фиксированные и одинаковые для всех колясок — и для немецких, и для остальных.' },
-  { q: 'На какой минимальный срок можно взять коляску?', a: `Минимальный срок — ${PRICES.minDays} дня, стоимость ${fmt(PRICES.minPrice)}. Каждый следующий день — ${fmt(PRICES.perDay)}. При аренде от ${PRICES.monthDays} дней — ${fmt(PRICES.monthPerDay)} в день.` },
+  { q: 'На какой минимальный срок можно взять коляску?', a: `Минимальный срок — ${PRICES.minDays} дня: ${fmt(PRICES.minPrice)}. Неделя — ${fmt(PRICES.weekPrice)}, месяц — ${fmt(PRICES.monthPrice)}. Дольше недели — +${PRICES.perDay} ₽ за каждый день, но не дороже месяца. От ${PRICES.monthDays} дней — ${PRICES.monthPerDay} ₽ в день.` },
   { q: 'Как получить коляску?', a: 'Самовывоз — бесплатно. Также можем отправить курьером через Яндекс.Доставку: стоимость доставки и возврата считается по тарифам сервиса и оплачивается клиентом.' },
   { q: 'В какое время доставляете?', a: `Доставка: ${SITE.deliveryHours}. Точное время согласуем при звонке.` },
   { q: 'Коляски чистые? Ими ведь уже пользовались.', a: 'Перед каждой выдачей кресло проходит техническое обслуживание и дезинфекцию.' },

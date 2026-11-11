@@ -17,7 +17,7 @@ const product = {
   description: chair.tagline,
   ...(chair.images[0] ? { image: chair.images.map((i) => `${SITE.url}${i.src}`) } : {}),
   offers: {
-    '@type': 'AggregateOffer', priceCurrency: 'RUB', lowPrice: PRICES.monthPerDay, highPrice: PRICES.minPrice, offerCount: 2,
+    '@type': 'AggregateOffer', priceCurrency: 'RUB', lowPrice: PRICES.monthPerDay, highPrice: PRICES.minPrice, offerCount: 3,
     availability: 'https://schema.org/InStock', areaServed: 'Москва',
   },
 };

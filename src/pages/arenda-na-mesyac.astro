@@ -5,7 +5,7 @@ import Calculator from '../components/Calculator.astro';
 import Quiz from '../components/Quiz.astro';
 import Cta from '../components/Cta.astro';
 import { PRICES, fmt } from '../data/site';
-const month = PRICES.monthDays * PRICES.monthPerDay;
+const month = PRICES.monthPrice;
 ---
 <Base
   title={`Аренда инвалидной коляски на месяц в Москве — ${fmt(month)}`}
