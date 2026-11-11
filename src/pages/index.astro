@@ -9,6 +9,7 @@ import Faq from '../components/Faq.astro';
 import Cta from '../components/Cta.astro';
 import Icon from '../components/Icon.astro';
 import MeasureGuide from '../components/MeasureGuide.astro';
+import ArticleCard from '../components/ArticleCard.astro';
 import { ARTICLES } from '../data/articles';
 import { CHAIRS, FAQ, PRICES, SITE } from '../data/site';
 
@@ -96,16 +97,8 @@ const ticker = ['Без залога', 'Дезинфекция перед каж
         </div>
         <a href="/stati/" class="inline-flex items-center gap-2 font-bold text-coral hover:underline">Все статьи <Icon name="arrow" class="size-5" /></a>
       </div>
-      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {ARTICLES.filter((a) => a.category === 'Инструкция').slice(0, 3).concat(ARTICLES.filter((a) => a.slug === 'ottobock-ili-meyra' || a.slug === 'kolyaska-posle-operacii' || a.slug === 'kak-perevozit-kolyasku-v-mashine')).map((a, i) => (
-          <a href={`/stati/${a.slug}/`} class="reveal tilt card group relative flex flex-col p-7" style={`--d:${(i % 3) * 90}ms`} data-tilt="6">
-            <span class="pop inline-flex w-fit items-center gap-1.5 rounded-full bg-mist px-3 py-1 text-[12px] font-bold text-coral"><Icon name="book" class="size-3.5" />{a.category} · {a.read}</span>
-            <h3 class="pop mt-4 text-lg leading-snug font-semibold">{a.title}</h3>
-            <p class="mt-2 line-clamp-2 text-[15px] text-muted">{a.description}</p>
-            <span class="mt-auto inline-flex items-center gap-2 pt-5 font-bold">Читать <Icon name="arrow" class="size-4 transition-transform group-hover:translate-x-1" /></span>
-            <span class="glare"></span>
-          </a>
-        ))}
+      <div class="mt-12 grid gap-6 md:grid-cols-3">
+        {['kak-izmerit-cheloveka-dlya-kolyaski', 'kak-preodolet-bordyur-i-stupeni', 'ottobock-ili-meyra'].map((slug, i) => <ArticleCard a={ARTICLES.find((x) => x.slug === slug)!} index={i} />)}
       </div>
     </div>
   </section>

@@ -1,7 +1,10 @@
 export type Article = {
   slug: string; title: string; metaTitle: string; description: string; keywords: string;
   read: string; date: string; category: 'Выбор' | 'Инструкция' | 'Советы'; html: string;
+  credit?: { author: string; license: string; url: string };
 };
+
+export const cover = (slug: string) => `/img/stati/${slug}.webp`;
 
 const cta = `<p><strong>Нужна коляска?</strong> Немецкие Ottobock и Meyra без залога, от 3 дней. Ответьте на несколько вопросов в форме ниже — подберём модель и покажем, как ей пользоваться.</p>`;
 
@@ -30,6 +33,7 @@ ${cta}`,
   },
   {
     slug: 'kak-izmerit-cheloveka-dlya-kolyaski',
+    credit: { author: 'Simon A. Eugster', license: 'CC BY-SA 3.0', url: 'https://commons.wikimedia.org/wiki/File:Tape_measure_colored.jpeg' },
     category: 'Инструкция',
     title: 'Как измерить человека для инвалидной коляски: пошаговая инструкция',
     metaTitle: 'Как измерить человека для инвалидной коляски — пошагово, со схемой',
@@ -52,6 +56,7 @@ ${cta}`,
   },
   {
     slug: 'kak-slozhit-i-razlozhit-kolyasku',
+    credit: { author: 'Arnold C', license: 'CC BY 2.0', url: 'https://commons.wikimedia.org/wiki/File:Blue_folding_lightweight_wheelchair.jpg' },
     category: 'Инструкция',
     title: 'Как сложить и разложить инвалидную коляску: инструкция',
     metaTitle: 'Как сложить и разложить инвалидную коляску — простая инструкция',
@@ -82,6 +87,7 @@ ${cta}`,
   },
   {
     slug: 'kak-preodolet-bordyur-i-stupeni',
+    credit: { author: 'John Robert McPherson', license: 'CC BY-SA 4.0', url: 'https://commons.wikimedia.org/wiki/File:Decpac_boarding_ramp_trial_Platform_3_Roma_Street_Railway_Station_Brisbane_IMGP1243.jpg' },
     category: 'Инструкция',
     title: 'Как заезжать на бордюр, ступени и пандус на инвалидной коляске',
     metaTitle: 'Бордюры, ступени и пандусы на инвалидной коляске — как безопасно',
@@ -146,6 +152,7 @@ ${cta}`,
   },
   {
     slug: 'kak-perevozit-kolyasku-v-mashine',
+    credit: { author: 'John Robert McPherson', license: 'CC BY-SA 4.0', url: 'https://commons.wikimedia.org/wiki/File:Boarding_platform_and_ramp_for_wheelchair_Police_Barracks_Waterhole_Burke_River_Boulia_Central_Western_Queensland_P1080778.jpg' },
     category: 'Советы',
     title: 'Как перевозить инвалидную коляску в машине и такси',
     metaTitle: 'Как перевозить инвалидную коляску в машине и такси — советы',
@@ -195,6 +202,7 @@ ${cta}`,
   },
   {
     slug: 'kolyaska-posle-operacii',
+    credit: { author: 'RG72', license: 'CC BY-SA 4.0', url: 'https://commons.wikimedia.org/wiki/File:Fervoja_hospitalo_en_Tjumeno_02.jpg' },
     category: 'Советы',
     title: 'Коляска после операции или перелома: брать в аренду или покупать',
     metaTitle: 'Инвалидная коляска после операции или перелома — аренда или покупка?',
@@ -221,6 +229,7 @@ ${cta}`,
   },
   {
     slug: 'kolyaska-dlya-pozhilogo-cheloveka',
+    credit: { author: 'Elvert Barnes', license: 'CC BY-SA 2.0', url: 'https://commons.wikimedia.org/wiki/File:108.DupontCircle.NW.WDC.16May2010.jpg' },
     category: 'Советы',
     title: 'Инвалидная коляска для пожилого человека: на что обратить внимание',
     metaTitle: 'Инвалидная коляска для пожилого человека — как выбрать и где взять',

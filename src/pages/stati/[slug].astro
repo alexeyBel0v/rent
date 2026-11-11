@@ -1,29 +1,43 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Quiz from '../../components/Quiz.astro';
-import { ARTICLES } from '../../data/articles';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { ARTICLES, cover } from '../../data/articles';
 import { SITE } from '../../data/site';
 export const getStaticPaths = () => ARTICLES.map((a) => ({ params: { slug: a.slug }, props: { a } }));
 const { a } = Astro.props;
+const related = ARTICLES.filter((x) => x.slug !== a.slug).sort((x, y) => Number(y.category === a.category) - Number(x.category === a.category)).slice(0, 3);
 const schema = {
   '@context': 'https://schema.org', '@type': 'Article', headline: a.title, description: a.description,
+  image: `${SITE.url}${cover(a.slug)}`,
   datePublished: a.date, dateModified: a.date, inLanguage: 'ru',
   author: { '@type': 'Organization', name: SITE.name }, publisher: { '@id': `${SITE.url}/#business` },
   mainEntityOfPage: `${SITE.url}/stati/${a.slug}/`,
 };
 ---
-<Base title={a.metaTitle} description={a.description} keywords={a.keywords} crumbs={[{ name: 'Статьи', href: '/stati/' }, { name: a.title, href: `/stati/${a.slug}/` }]} schema={[schema]}>
-  <article class="container-x max-w-3xl pt-8 pb-10">
-    <h1 class="text-[32px] leading-[1.1] font-semibold md:text-[48px]">{a.title}</h1>
-    <p class="mt-4 text-muted">{a.category} · {a.read} чтения</p>
-    <div class="prose-rwc mt-8" set:html={a.html} />
-    <aside class="mt-12 border-t border-ink/10 pt-8">
-      <p class="font-display text-xl font-semibold">Читайте также</p>
-      <ul class="mt-4 grid gap-2">
-        {ARTICLES.filter((x) => x.slug !== a.slug).slice(0, 4).map((x) => <li><a href={`/stati/${x.slug}/`} class="font-semibold text-coral hover:underline">{x.title}</a></li>)}
-        <li><a href="/kak-izmerit/" class="font-semibold text-coral hover:underline">Памятка: как снять мерки для коляски</a></li>
-      </ul>
-    </aside>
+<Base title={a.metaTitle} description={a.description} keywords={a.keywords} ogImage={cover(a.slug)} crumbs={[{ name: 'Статьи', href: '/stati/' }, { name: a.title, href: `/stati/${a.slug}/` }]} schema={[schema]}>
+  <article class="pt-8 pb-10">
+    <header class="container-x max-w-4xl">
+      <p class="text-[14px] font-bold text-coral">{a.category} · {a.read} чтения</p>
+      <h1 class="mt-3 text-[32px] leading-[1.08] font-semibold md:text-[52px]">{a.title}</h1>
+      <p class="mt-4 text-lg text-muted md:text-xl">{a.description}</p>
+    </header>
+    <figure class="container-x mt-8 max-w-5xl">
+      <div class="overflow-hidden rounded-[32px] shadow-[0_40px_80px_-40px_rgb(14_26_54/.45)]">
+        <img src={cover(a.slug)} alt={a.title} width="1200" height="750" class="aspect-[16/9] w-full object-cover" fetchpriority="high" />
+      </div>
+      {a.credit && <figcaption class="mt-2 text-right text-[12px] text-muted">Фото: <a href={a.credit.url} target="_blank" rel="noopener nofollow" class="underline underline-offset-2">{a.credit.author}, Wikimedia Commons</a>, {a.credit.license}, с цветокоррекцией</figcaption>}
+    </figure>
+    <div class="container-x max-w-3xl">
+      <div class="prose-rwc mt-10" set:html={a.html} />
+    </div>
   </article>
+
+  <section class="container-x pb-10">
+    <p class="font-display text-2xl font-semibold md:text-3xl">Читайте также</p>
+    <div class="mt-6 grid gap-6 md:grid-cols-3">
+      {related.map((x, i) => <ArticleCard a={x} index={i} />)}
+    </div>
+  </section>
   <Quiz />
 </Base>
