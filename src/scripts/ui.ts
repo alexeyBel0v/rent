@@ -10,14 +10,26 @@ onScroll();
 const menu = document.querySelector<HTMLElement>('[data-menu]');
 const burger = document.querySelector<HTMLButtonElement>('[data-burger]');
 const setMenu = (open: boolean) => {
-  menu?.classList.toggle('hidden', !open);
+  if (!menu) return;
+  menu.classList.toggle('hidden', !open);
+  menu.classList.toggle('is-open', open);
   burger?.setAttribute('aria-expanded', String(open));
   document.documentElement.style.overflow = open ? 'hidden' : '';
+  if (open) menu.querySelector<HTMLElement>('[data-menu-close]:not(.mm-bg)')?.focus();
+  else burger?.focus();
 };
 burger?.addEventListener('click', () => setMenu(true));
-document.querySelector('[data-menu-close]')?.addEventListener('click', () => setMenu(false));
+document.querySelectorAll('[data-menu-close]').forEach((b) => b.addEventListener('click', () => setMenu(false)));
 document.querySelectorAll('[data-menu-link]').forEach((a) => a.addEventListener('click', () => setMenu(false)));
-addEventListener('keydown', (e) => e.key === 'Escape' && setMenu(false));
+addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu?.classList.contains('hidden')) setMenu(false); });
+
+// Cookie-баннер
+const cookie = document.querySelector<HTMLElement>('[data-cookie]');
+const store = { get: (k: string) => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* приватный режим */ } } };
+if (cookie && !store.get('rwc-cookie')) {
+  setTimeout(() => cookie.classList.remove('hidden'), 1200);
+  cookie.querySelector('[data-cookie-ok]')?.addEventListener('click', () => { store.set('rwc-cookie', '1'); cookie.classList.add('hidden'); });
+}
 
 // Появление блоков
 const io = new IntersectionObserver(

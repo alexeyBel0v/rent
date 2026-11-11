@@ -1,0 +1,66 @@
+---
+// Памятка: как снять мерки человека для подбора коляски
+type Props = { compact?: boolean };
+const { compact = false } = Astro.props;
+const steps = [
+  { k: 'A', title: 'Ширина бёдер', how: 'Человек сидит на жёстком стуле. Измерьте расстояние между самыми широкими точками бёдер (по одежде, в которой он будет ездить).', rule: 'Ширина сиденья = замер + 2–5 см' },
+  { k: 'B', title: 'Глубина сиденья', how: 'Сидя, спиной к спинке стула: от спины до подколенной ямки.', rule: 'Глубина сиденья = замер − 4–5 см' },
+  { k: 'C', title: 'Высота спинки', how: 'От сиденья до нижнего угла лопатки (или до подмышки — если нужна хорошая опора).', rule: 'Чем слабее спина — тем выше спинка' },
+  { k: 'D', title: 'Длина голени', how: 'От подколенной ямки до пола, в обуви. Стопы должны стоять на подножках, бедро — лежать на сиденье.', rule: 'Подстроим подножки при выдаче' },
+  { k: 'E', title: 'Двери и лифт', how: 'Самая узкая дверь дома (обычно ванная) и дверь лифта — в самом узком месте, между косяками.', rule: 'Коляска шире сиденья на ~18–20 см' },
+];
+---
+<div class:list={['grid gap-6', compact ? 'lg:grid-cols-[1fr_1.1fr]' : 'lg:grid-cols-[1fr_1.15fr]']}>
+  <div class="reveal card relative self-start overflow-hidden p-6 md:p-8 lg:sticky lg:top-28">
+    <svg viewBox="0 0 520 380" class="w-full" role="img" aria-label="Схема замеров: A — ширина бёдер, B — глубина сиденья, C — высота спинки, D — длина голени">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#e5484d"/></marker>
+      </defs>
+      <!-- вид спереди -->
+      <text x="110" y="24" text-anchor="middle" font-size="14" font-weight="700" fill="#5d6886">Спереди</text>
+      <circle cx="110" cy="70" r="24" fill="#13204a"/>
+      <rect x="72" y="100" width="76" height="92" rx="26" fill="#13204a"/>
+      <rect x="52" y="186" width="116" height="40" rx="18" fill="#2b4dbb"/>
+      <rect x="62" y="222" width="34" height="96" rx="14" fill="#13204a"/>
+      <rect x="124" y="222" width="34" height="96" rx="14" fill="#13204a"/>
+      <rect x="40" y="226" width="140" height="10" rx="4" fill="#c9d3e8"/>
+      <line x1="52" y1="248" x2="168" y2="248" stroke="#e5484d" stroke-width="3" marker-start="url(#ar)" marker-end="url(#ar)"/>
+      <circle cx="110" cy="262" r="14" fill="#e5484d"/><text x="110" y="267" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">A</text>
+      <line x1="20" y1="340" x2="200" y2="340" stroke="#c9d3e8" stroke-width="3"/>
+
+      <!-- вид сбоку -->
+      <text x="370" y="24" text-anchor="middle" font-size="14" font-weight="700" fill="#5d6886">Сбоку</text>
+      <rect x="262" y="60" width="12" height="190" rx="5" fill="#c9d3e8"/>
+      <rect x="262" y="232" width="190" height="12" rx="5" fill="#c9d3e8"/>
+      <circle cx="306" cy="74" r="24" fill="#13204a"/>
+      <rect x="278" y="102" width="52" height="130" rx="22" fill="#13204a"/>
+      <rect x="290" y="196" width="150" height="40" rx="18" fill="#2b4dbb"/>
+      <rect x="410" y="210" width="34" height="122" rx="14" fill="#13204a"/>
+      <rect x="400" y="326" width="70" height="14" rx="6" fill="#13204a"/>
+      <!-- B -->
+      <line x1="276" y1="262" x2="412" y2="262" stroke="#e5484d" stroke-width="3" marker-start="url(#ar)" marker-end="url(#ar)"/>
+      <circle cx="344" cy="278" r="14" fill="#e5484d"/><text x="344" y="283" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">B</text>
+      <!-- C -->
+      <line x1="248" y1="228" x2="248" y2="126" stroke="#e5484d" stroke-width="3" marker-start="url(#ar)" marker-end="url(#ar)"/>
+      <circle cx="232" cy="176" r="14" fill="#e5484d"/><text x="232" y="181" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">C</text>
+      <!-- D -->
+      <line x1="486" y1="218" x2="486" y2="338" stroke="#e5484d" stroke-width="3" marker-start="url(#ar)" marker-end="url(#ar)"/>
+      <circle cx="486" cy="278" r="14" fill="#e5484d"/><text x="486" y="283" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">D</text>
+      <line x1="250" y1="340" x2="510" y2="340" stroke="#c9d3e8" stroke-width="3"/>
+    </svg>
+    <p class="mt-4 rounded-2xl bg-cream px-4 py-3 text-[14px] text-muted">Понадобится обычная рулетка и 5 минут. Меряйте, когда человек сидит на жёстком стуле с прямой спинкой.</p>
+  </div>
+
+  <ol class="grid gap-3">
+    {steps.map((s, i) => (
+      <li class="reveal card flex gap-4 p-5" style={`--d:${i * 70}ms`}>
+        <span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-coral font-display font-semibold text-white">{s.k}</span>
+        <div>
+          <p class="text-lg font-bold">{s.title}</p>
+          <p class="mt-1 text-[15px] text-muted">{s.how}</p>
+          <p class="mt-2 inline-block rounded-full bg-mist px-3 py-1 text-[13px] font-bold">{s.rule}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+</div>

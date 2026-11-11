@@ -15,8 +15,15 @@ const schema = {
 <Base title={a.metaTitle} description={a.description} keywords={a.keywords} crumbs={[{ name: 'Статьи', href: '/stati/' }, { name: a.title, href: `/stati/${a.slug}/` }]} schema={[schema]}>
   <article class="container-x max-w-3xl pt-8 pb-10">
     <h1 class="text-[32px] leading-[1.1] font-semibold md:text-[48px]">{a.title}</h1>
-    <p class="mt-4 text-muted">{a.read} чтения</p>
+    <p class="mt-4 text-muted">{a.category} · {a.read} чтения</p>
     <div class="prose-rwc mt-8" set:html={a.html} />
+    <aside class="mt-12 border-t border-ink/10 pt-8">
+      <p class="font-display text-xl font-semibold">Читайте также</p>
+      <ul class="mt-4 grid gap-2">
+        {ARTICLES.filter((x) => x.slug !== a.slug).slice(0, 4).map((x) => <li><a href={`/stati/${x.slug}/`} class="font-semibold text-coral hover:underline">{x.title}</a></li>)}
+        <li><a href="/kak-izmerit/" class="font-semibold text-coral hover:underline">Памятка: как снять мерки для коляски</a></li>
+      </ul>
+    </aside>
   </article>
   <Quiz />
 </Base>

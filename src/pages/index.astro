@@ -8,6 +8,8 @@ import Quiz from '../components/Quiz.astro';
 import Faq from '../components/Faq.astro';
 import Cta from '../components/Cta.astro';
 import Icon from '../components/Icon.astro';
+import MeasureGuide from '../components/MeasureGuide.astro';
+import { ARTICLES } from '../data/articles';
 import { CHAIRS, FAQ, PRICES, SITE } from '../data/site';
 
 const faqSchema = {
@@ -26,14 +28,14 @@ const offerSchema = {
     { '@type': 'Offer', name: 'Аренда на 30 дней', price: PRICES.monthDays * PRICES.monthPerDay, priceCurrency: 'RUB' },
   ],
 };
-const ticker = ['Без залога', 'Дезинфекция перед каждой выдачей', 'Аренда от 3 дней', 'Ремонт за наш счёт', 'Бесплатная замена', 'Самовывоз бесплатно', 'Ottobock и Ortonica'];
+const ticker = ['Без залога', 'Дезинфекция перед каждой выдачей', 'Аренда от 3 дней', 'Ремонт за наш счёт', 'Бесплатная замена', 'Самовывоз бесплатно', 'Немецкие Ottobock и Meyra', 'Подбор по размерам'];
 ---
 <Base
-  title="Аренда инвалидной коляски в Москве без залога — прокат от 200 ₽/день"
-  description="Прокат инвалидных колясок в Москве: без залога, от 3 дней, от 200 ₽ в день. Дезинфекция перед каждой выдачей, бесплатная замена, самовывоз бесплатно, доставка курьером. ☎ +7 968 808-89-88"
-  keywords="аренда инвалидной коляски, прокат инвалидных колясок москва, инвалидное кресло напрокат, коляска инвалидная аренда без залога, взять инвалидную коляску в аренду"
+  title="Аренда немецких инвалидных колясок Ottobock и Meyra в Москве — без залога, от 200 ₽/день"
+  description="Прокат немецких инвалидных колясок Ottobock и Meyra в Москве: без залога, от 3 дней, от 200 ₽ в день. Дезинфекция перед каждой выдачей, бесплатная замена, самовывоз бесплатно, доставка курьером. ☎ +7 968 808-89-88"
+  keywords="аренда инвалидной коляски, аренда коляски ottobock, прокат коляски meyra, немецкая инвалидная коляска напрокат, прокат инвалидных колясок москва, инвалидное кресло напрокат, коляска инвалидная аренда без залога, взять инвалидную коляску в аренду"
   schema={[faqSchema, offerSchema]}
-  darkHeader
+
 >
   <Hero />
 
@@ -48,7 +50,8 @@ const ticker = ['Без залога', 'Дезинфекция перед каж
       <div class="reveal flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <div class="max-w-2xl">
           <span class="eyebrow">Каталог</span>
-          <h2 class="h2 mt-4">Коляски, которые мы сдаём в аренду</h2>
+          <h2 class="h2 mt-4">Немецкие коляски — и не только</h2>
+          <p class="mt-4 text-lg text-muted">Ottobock и Meyra из Германии — основа нашего парка. Для коротких сроков и экономного бюджета есть Ortonica и Флагман.</p>
         </div>
         <a href="/katalog/" class="inline-flex items-center gap-2 font-bold text-coral hover:underline">Весь каталог <Icon name="arrow" class="size-5" /></a>
       </div>
@@ -71,7 +74,41 @@ const ticker = ['Без залога', 'Дезинфекция перед каж
   <Calculator />
   <Sections only={['benefits', 'steps']} />
   <Quiz />
+  <section class="py-20 md:py-28" id="zamery">
+    <div class="container-x">
+      <div class="reveal flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <div class="max-w-2xl">
+          <span class="eyebrow">Памятка</span>
+          <h2 class="h2 mt-4">Как снять мерки, чтобы коляска подошла с первого раза</h2>
+        </div>
+        <a href="/kak-izmerit/" class="inline-flex items-center gap-2 font-bold text-coral hover:underline">Подробнее <Icon name="arrow" class="size-5" /></a>
+      </div>
+      <div class="mt-12"><MeasureGuide compact /></div>
+    </div>
+  </section>
   <Sections only={['delivery', 'reviews']} />
+  <section class="py-20 md:py-28" id="stati">
+    <div class="container-x">
+      <div class="reveal flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <div class="max-w-2xl">
+          <span class="eyebrow">Инструкции</span>
+          <h2 class="h2 mt-4">Как пользоваться коляской: просто о важном</h2>
+        </div>
+        <a href="/stati/" class="inline-flex items-center gap-2 font-bold text-coral hover:underline">Все статьи <Icon name="arrow" class="size-5" /></a>
+      </div>
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {ARTICLES.filter((a) => a.category === 'Инструкция').slice(0, 3).concat(ARTICLES.filter((a) => a.slug === 'ottobock-ili-meyra' || a.slug === 'kolyaska-posle-operacii' || a.slug === 'kak-perevozit-kolyasku-v-mashine')).map((a, i) => (
+          <a href={`/stati/${a.slug}/`} class="reveal tilt card group relative flex flex-col p-7" style={`--d:${(i % 3) * 90}ms`} data-tilt="6">
+            <span class="pop inline-flex w-fit items-center gap-1.5 rounded-full bg-mist px-3 py-1 text-[12px] font-bold text-coral"><Icon name="book" class="size-3.5" />{a.category} · {a.read}</span>
+            <h3 class="pop mt-4 text-lg leading-snug font-semibold">{a.title}</h3>
+            <p class="mt-2 line-clamp-2 text-[15px] text-muted">{a.description}</p>
+            <span class="mt-auto inline-flex items-center gap-2 pt-5 font-bold">Читать <Icon name="arrow" class="size-4 transition-transform group-hover:translate-x-1" /></span>
+            <span class="glare"></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
   <Faq limit={6} />
 
   <section class="pb-16">
@@ -79,7 +116,7 @@ const ticker = ['Без залога', 'Дезинфекция перед каж
       <div class="reveal prose-rwc max-w-3xl">
         <h2>Прокат инвалидных колясок в Москве</h2>
         <p>Инвалидная коляска часто нужна на время: после операции или перелома, на период реабилитации, для поездки с пожилым родственником или на выписку из больницы. Покупать дорогое кресло ради нескольких недель невыгодно — проще взять коляску в аренду.</p>
-        <p>Мы сдаём напрокат складные облегчённые коляски Ortonica и немецкие Ottobock. <a href="/ceny/">Аренда</a> — от {PRICES.minDays} дней и без залога, а при сроке от месяца день обходится всего в {PRICES.monthPerDay} ₽. Перед каждой выдачей кресло проходит техническое обслуживание и дезинфекцию. Забрать коляску можно самостоятельно или заказать <a href="/dostavka/">доставку по Москве</a>.</p>
+        <p>Основа нашего парка — немецкие коляски Ottobock Старт и Meyra Eurochair²: надёжные, удобные, проверенные годами. Для коротких сроков есть облегчённая Ortonica и прочная Флагман. <a href="/ceny/">Аренда</a> — от {PRICES.minDays} дней и без залога, а при сроке от месяца день обходится всего в {PRICES.monthPerDay} ₽. Перед каждой выдачей кресло проходит техническое обслуживание и дезинфекцию. Забрать коляску можно самостоятельно или заказать <a href="/dostavka/">доставку по Москве</a>.</p>
         <p>Не знаете, какая модель подойдёт? Ответьте на 4 вопроса в форме подбора — мы учтём вес и рост человека, ширину дверей и лифта. Почитайте также, <a href="/stati/kak-vybrat-invalidnuyu-kolyasku/">как выбрать инвалидную коляску</a>.</p>
       </div>
     </div>

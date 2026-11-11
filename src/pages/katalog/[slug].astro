@@ -23,7 +23,7 @@ const product = {
 };
 ---
 <Base
-  title={`${chair.name} — аренда инвалидной коляски в Москве без залога`}
+  title={`${chair.name} напрокат — аренда инвалидной коляски${chair.german ? ' из Германии' : ''} в Москве`}
   description={`Аренда инвалидной коляски ${chair.name} в Москве: ${chair.tagline.toLowerCase()}. Без залога, от ${PRICES.minDays} дней, от ${PRICES.monthPerDay} ₽/день. Доставка и самовывоз.`}
   keywords={`${chair.brand} аренда, коляска ${chair.name} напрокат, инвалидная коляска ${chair.brand} москва`}
   crumbs={[{ name: 'Каталог', href: '/katalog/' }, { name: chair.name, href: `/katalog/${chair.slug}/` }]}
@@ -33,7 +33,7 @@ const product = {
     <div class="reveal">
       <div class="tilt card relative flex aspect-square items-center justify-center overflow-hidden bg-gradient-to-br from-mist to-white" data-tilt="6" data-gallery>
         {chair.images.length
-          ? chair.images.map((img, i) => <img src={img.src} alt={img.alt} width="648" height="600" loading={i ? 'lazy' : 'eager'} class:list={['pop absolute h-[78%] w-auto object-contain drop-shadow-[0_30px_25px_rgba(14,26,54,.3)] transition-opacity duration-500', i ? 'opacity-0' : '']} data-g={i} />)
+          ? chair.images.map((img, i) => <img src={img.src} alt={img.alt} width="648" height="600" loading={i ? 'lazy' : 'eager'} class:list={['absolute transition-opacity duration-500', chair.photo ? 'inset-0 h-full w-full object-cover' : 'pop h-[78%] w-auto object-contain drop-shadow-[0_30px_25px_rgba(14,26,54,.3)]', i ? 'opacity-0' : '']} data-g={i} />)
           : <ChairArt class="pop h-[70%] w-auto text-ink" />}
         <span class="glare"></span>
       </div>
@@ -48,7 +48,7 @@ const product = {
       )}
     </div>
     <div class="reveal" style="--d:120ms">
-      <p class="text-[14px] font-bold tracking-wide text-coral uppercase">{chair.brand}</p>
+      <p class="text-[14px] font-bold tracking-wide text-coral uppercase">{chair.brand} · {chair.country}</p>
       <h1 class="mt-2 text-[34px] leading-[1.08] font-semibold md:text-[48px]">{chair.name}</h1>
       <p class="mt-4 text-lg text-muted">{chair.tagline}</p>
       <div class="mt-8 grid grid-cols-2 gap-3">

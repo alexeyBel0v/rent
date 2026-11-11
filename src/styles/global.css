@@ -25,9 +25,10 @@
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   body {
     @apply bg-cream text-ink font-sans antialiased;
+    overflow-x: clip;
     font-feature-settings: 'ss01';
   }
-  h1, h2, h3 { @apply font-display; text-wrap: balance; letter-spacing: -0.01em; }
+  h1, h2, h3 { @apply font-display; text-wrap: balance; letter-spacing: -0.01em; overflow-wrap: break-word; hyphens: auto; }
   p { text-wrap: pretty; }
   :focus-visible { outline: 3px solid var(--color-sky); outline-offset: 3px; border-radius: 6px; }
   ::selection { background: var(--color-coral); color: white; }
@@ -36,7 +37,7 @@
 @layer components {
   .container-x { @apply mx-auto w-full max-w-[1200px] px-5 md:px-8; }
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 font-bold text-[15px] leading-none select-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 font-bold text-[15px] leading-none whitespace-nowrap select-none;
     transition: transform .2s var(--ease-out-expo), background-color .2s, box-shadow .2s;
   }
   .btn:active { transform: scale(.96); }
@@ -71,6 +72,8 @@
 @keyframes marquee { to { transform: translateX(-50%); } }
 .marquee { animation: marquee 40s linear infinite; }
 
+@keyframes fabPulse { 0% { box-shadow: 0 0 0 0 rgb(229 72 77 / .55); } 70% { box-shadow: 0 0 0 16px rgb(229 72 77 / 0); } 100% { box-shadow: 0 0 0 0 rgb(229 72 77 / 0); } }
+.fab-pulse { animation: fabPulse 2.4s infinite; }
 @keyframes floaty { 50% { transform: translateY(-10px); } }
 .floaty { animation: floaty 6s ease-in-out infinite; }
 
@@ -82,7 +85,7 @@ input[type='range']::-moz-range-thumb { width: 16px; height: 16px; border-radius
 
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
-  .marquee, .floaty { animation: none; }
+  .marquee, .floaty, .fab-pulse { animation: none; }
   .tilt, .tilt .pop { transform: none !important; }
   html { scroll-behavior: auto; }
 }

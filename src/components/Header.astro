@@ -1,70 +1,95 @@
 ---
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
-import { SITE } from '../data/site';
-type Props = { dark?: boolean };
-const { dark = false } = Astro.props;
+import { SITE, CHAIRS, PRICES } from '../data/site';
 const nav = [
   { href: '/katalog/', label: 'Каталог' },
   { href: '/ceny/', label: 'Цены' },
   { href: '/dostavka/', label: 'Доставка' },
-  { href: '/#otzyvy', label: 'Отзывы' },
-  { href: '/faq/', label: 'Вопросы' },
+  { href: '/kak-izmerit/', label: 'Как измерить' },
+  { href: '/stati/', label: 'Статьи' },
   { href: '/kontakty/', label: 'Контакты' },
 ];
+const thumb = (c: (typeof CHAIRS)[number]) => c.images[0]!.src;
 ---
-<header class="fixed inset-x-0 top-0 z-50 transition-all duration-300" data-header data-dark={dark ? '1' : '0'}>
+<header class="fixed inset-x-0 top-0 z-50" data-header>
   <div class="container-x">
     <div class="mt-3 flex items-center justify-between gap-4 rounded-full px-3 py-2 pl-4 transition-all duration-300 md:px-4 md:pl-5" data-header-bar>
-      <span class="header-logo-light hidden"><Logo light /></span>
-      <span class="header-logo-dark"><Logo /></span>
-      <nav class="hidden items-center gap-1 lg:flex" aria-label="Основное меню">
+      <Logo />
+      <nav class="hidden items-center gap-0.5 lg:flex" aria-label="Основное меню">
         {nav.map((n) => (
-          <a href={n.href} class="header-link rounded-full px-3.5 py-2 text-[15px] font-semibold transition-colors">{n.label}</a>
+          <a href={n.href} class="rounded-full px-3 py-2 text-[15px] font-semibold transition-colors hover:bg-ink/5">{n.label}</a>
         ))}
       </nav>
       <div class="flex items-center gap-2">
-        <a href={SITE.phoneHref} class="header-phone hidden font-bold whitespace-nowrap md:block">{SITE.phone}</a>
-        <a href="/#podbor" class="btn btn-primary hidden !px-5 !py-3 whitespace-nowrap sm:inline-flex">Подобрать кресло</a>
-        <button class="header-burger grid size-11 place-items-center rounded-full lg:hidden" aria-label="Открыть меню" aria-expanded="false" data-burger>
+        <a href={SITE.phoneHref} class="hidden font-bold whitespace-nowrap xl:block">{SITE.phone}</a>
+        <a href="/#podbor" class="btn btn-primary hidden !px-5 !py-3 whitespace-nowrap sm:inline-flex">Подобрать</a>
+        <button class="grid size-11 place-items-center rounded-full bg-ink text-white lg:hidden" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu" data-burger>
           <Icon name="menu" />
         </button>
       </div>
     </div>
   </div>
+</header>
 
-  <div class="fixed inset-0 z-50 hidden bg-ink/97 backdrop-blur-xl" data-menu role="dialog" aria-modal="true" aria-label="Меню">
-    <div class="container-x flex h-full flex-col pt-6 pb-10">
-      <div class="flex items-center justify-between">
-        <Logo light />
-        <button class="grid size-11 place-items-center rounded-full bg-white/10 text-white" aria-label="Закрыть меню" data-menu-close><Icon name="close" /></button>
+<!-- Мобильное меню -->
+<div id="mobile-menu" class="mm fixed inset-0 z-[60] hidden" data-menu role="dialog" aria-modal="true" aria-label="Меню">
+  <div class="mm-bg absolute inset-0 bg-ink/40 backdrop-blur-sm" data-menu-close></div>
+  <div class="mm-panel absolute inset-x-2 top-2 bottom-2 flex flex-col overflow-y-auto rounded-[28px] bg-cream shadow-2xl">
+    <div class="sticky top-0 z-10 flex items-center justify-between bg-cream/90 px-5 pt-4 pb-3 backdrop-blur">
+      <Logo />
+      <button class="grid size-11 place-items-center rounded-full bg-ink text-white" aria-label="Закрыть меню" data-menu-close><Icon name="close" /></button>
+    </div>
+
+    <div class="px-5">
+      <p class="mm-item mt-2 text-[13px] font-bold tracking-wide text-muted uppercase" style="--i:0">Коляски в наличии</p>
+      <div class="-mx-5 mt-3 flex snap-x gap-3 overflow-x-auto px-5 pb-2 [scrollbar-width:none]">
+        {CHAIRS.map((c, i) => (
+          <a href={`/katalog/${c.slug}/`} class="mm-item w-[150px] shrink-0 snap-start rounded-3xl bg-white p-3 shadow-sm ring-1 ring-ink/5" style={`--i:${i + 1}`} data-menu-link>
+            <span class="relative grid aspect-square place-items-center overflow-hidden rounded-2xl bg-gradient-to-br from-mist to-white">
+              <img src={thumb(c)} alt="" loading="lazy" class:list={[c.photo ? 'h-full w-full object-cover' : 'h-[88%] w-auto object-contain']} />
+              {c.german && <span class="absolute top-1.5 left-1.5 flex h-2.5 w-3.5 flex-col overflow-hidden rounded-[2px]" aria-label="Германия"><i class="flex-1 bg-[#111]"></i><i class="flex-1 bg-[#dd0000]"></i><i class="flex-1 bg-[#ffce00]"></i></span>}
+            </span>
+            <span class="mt-2 block text-[15px] leading-tight font-bold">{c.name}</span>
+            <span class="text-[13px] text-muted">от {PRICES.monthPerDay} ₽/день</span>
+          </a>
+        ))}
       </div>
-      <nav class="mt-10 flex flex-col gap-1" aria-label="Мобильное меню">
-        {nav.map((n) => <a href={n.href} class="font-display py-2.5 text-3xl font-semibold text-white" data-menu-link>{n.label}</a>)}
+
+      <nav class="mt-4 grid grid-cols-2 gap-2" aria-label="Мобильное меню">
+        {nav.map((n, i) => (
+          <a href={n.href} class="mm-item flex items-center justify-between rounded-2xl bg-white px-4 py-4 text-[16px] font-bold shadow-sm ring-1 ring-ink/5" style={`--i:${i + 5}`} data-menu-link>
+            {n.label}<Icon name="arrow" class="size-4 text-coral" />
+          </a>
+        ))}
       </nav>
-      <div class="mt-auto flex flex-col gap-3">
-        <a href={SITE.phoneHref} class="font-display text-2xl font-semibold text-white">{SITE.phone}</a>
-        <div class="flex gap-2">
-          <a href={SITE.whatsappHref} class="btn btn-ghost flex-1" target="_blank" rel="noopener">WhatsApp</a>
-          <a href={SITE.telegramBot} class="btn btn-ghost flex-1" target="_blank" rel="noopener">Telegram</a>
+
+      <a href="/#podbor" class="mm-item btn btn-primary mt-4 w-full !py-4 text-base" style="--i:11" data-menu-link>Подобрать коляску за 1 минуту</a>
+    </div>
+
+    <div class="mm-item mt-auto px-5 pt-6 pb-5" style="--i:12">
+      <div class="flex items-center gap-3 rounded-3xl bg-ink p-4 text-white">
+        <div class="min-w-0 flex-1">
+          <p class="text-[12px] text-white/60">Звоните, ответим сразу</p>
+          <a href={SITE.phoneHref} class="font-display text-[15px] font-semibold whitespace-nowrap">{SITE.phone}</a>
         </div>
+        <a href={SITE.phoneHref} class="grid size-12 place-items-center rounded-full bg-coral" aria-label="Позвонить"><Icon name="phone" class="size-5" /></a>
+        <a href={SITE.telegramBot} target="_blank" rel="noopener" class="grid size-12 place-items-center rounded-full bg-[#2aabee]" aria-label="Написать в Telegram"><Icon name="tg" class="size-5" /></a>
       </div>
     </div>
   </div>
-</header>
+</div>
 
 <style>
-  [data-header-bar] { background: transparent; }
-  [data-header] .header-link, [data-header] .header-phone, [data-header] .header-burger { color: var(--color-ink); }
-  [data-header] .header-link:hover { background: rgb(14 26 54 / .06); }
-  [data-header][data-dark='1']:not(.is-scrolled) .header-link,
-  [data-header][data-dark='1']:not(.is-scrolled) .header-phone,
-  [data-header][data-dark='1']:not(.is-scrolled) .header-burger { color: white; }
-  [data-header][data-dark='1']:not(.is-scrolled) .header-link:hover { background: rgb(255 255 255 / .1); }
-  [data-header][data-dark='1']:not(.is-scrolled) .header-logo-light { display: block; }
-  [data-header][data-dark='1']:not(.is-scrolled) .header-logo-dark { display: none; }
   [data-header].is-scrolled [data-header-bar] {
-    background: rgb(255 253 249 / .82); backdrop-filter: blur(18px) saturate(1.6);
+    background: rgb(255 253 249 / .85); backdrop-filter: blur(18px) saturate(1.6);
     box-shadow: 0 10px 40px -18px rgb(14 26 54 / .35), inset 0 0 0 1px rgb(14 26 54 / .06);
   }
+  .mm.is-open .mm-bg { animation: mmFade .3s ease both; }
+  .mm.is-open .mm-panel { animation: mmIn .5s var(--ease-out-expo) both; }
+  .mm.is-open .mm-item { animation: mmItem .55s var(--ease-out-expo) both; animation-delay: calc(var(--i, 0) * 35ms + 80ms); }
+  @keyframes mmFade { from { opacity: 0; } }
+  @keyframes mmIn { from { opacity: 0; transform: translateY(-16px) scale(.98); } }
+  @keyframes mmItem { from { opacity: 0; transform: translateY(14px); } }
+  @media (prefers-reduced-motion: reduce) { .mm.is-open .mm-bg, .mm.is-open .mm-panel, .mm.is-open .mm-item { animation: none; } }
 </style>

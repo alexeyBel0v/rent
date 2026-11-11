@@ -1,12 +1,14 @@
 ---
 import Icon from './Icon.astro';
-import { SITE } from '../data/site';
+import { SITE, PRICES, calcPrice, fmt } from '../data/site';
 const questions = [
-  { key: 'weight', label: 'Вес человека', min: 30, max: 130, value: 75, unit: 'кг', hint: 'От веса зависит ширина сиденья и прочность рамы' },
+  { key: 'days', label: 'На сколько дней нужна коляска?', min: PRICES.minDays, max: 90, value: 14, unit: 'дн.', hint: 'Можно продлить в любой момент — просто позвоните', price: true },
+  { key: 'weight', label: 'Вес человека', min: 30, max: 150, value: 75, unit: 'кг', hint: 'От веса зависит ширина сиденья и прочность рамы' },
   { key: 'height', label: 'Рост', min: 110, max: 210, value: 170, unit: 'см', hint: 'Подберём высоту спинки и длину подножек' },
-  { key: 'door', label: 'Ширина дверного проёма', min: 50, max: 100, value: 80, unit: 'см', hint: 'Самая узкая дверь дома — обычно ванная или туалет' },
-  { key: 'lift', label: 'Ширина двери лифта', min: 50, max: 110, value: 80, unit: 'см', hint: 'Если лифта нет — оставьте как есть' },
+  { key: 'door', label: 'Ширина самой узкой двери', min: 50, max: 100, value: 70, unit: 'см', hint: 'Чаще всего это ванная или туалет', link: true },
+  { key: 'lift', label: 'Ширина двери лифта', min: 50, max: 110, value: 80, unit: 'см', hint: 'Если лифта нет или первый этаж — оставьте как есть' },
 ];
+const total = questions.length;
 ---
 <section id="podbor" class="scroll-mt-20 py-20 md:py-28">
   <div class="container-x">
@@ -17,44 +19,51 @@ const questions = [
       <div class="relative grid gap-10 p-6 md:p-12 lg:grid-cols-[1fr_1.2fr] lg:p-16">
         <div class="reveal">
           <span class="eyebrow">Подбор за 1 минуту</span>
-          <h2 class="h2 mt-4">Ответьте на 4 вопроса — подберём кресло</h2>
-          <p class="mt-4 text-lg text-white/70">Чтобы коляска проходила в двери, в лифт и была удобной. Перезвоним в течение 15 минут.</p>
+          <h2 class="h2 mt-4">Ответьте на {total} вопросов — подберём коляску</h2>
+          <p class="mt-4 text-lg text-white/70">Чтобы коляска проходила в двери и лифт, была удобной и не стоила лишнего. Перезвоним в течение 15 минут.</p>
           <ul class="mt-8 space-y-3 text-white/85">
             <li class="flex gap-3"><Icon name="check" class="size-6 shrink-0 text-mint" />Бесплатная консультация</li>
             <li class="flex gap-3"><Icon name="check" class="size-6 shrink-0 text-mint" />Не подошло — заменим бесплатно</li>
             <li class="flex gap-3"><Icon name="check" class="size-6 shrink-0 text-mint" />Ничего не нужно платить заранее</li>
           </ul>
+          <a href="/kak-izmerit/" class="mt-8 inline-flex items-center gap-2 rounded-2xl bg-white/10 px-4 py-3 font-bold ring-1 ring-white/15 hover:bg-white/15"><Icon name="ruler" class="size-5 text-sky" />Памятка: как снять мерки для коляски</a>
         </div>
 
         <form class="reveal rounded-[28px] bg-white p-6 text-ink md:p-8" data-quiz novalidate style="--d:120ms">
           <div class="flex items-center gap-2" aria-hidden="true">
-            {[0, 1, 2, 3, 4].map((i) => <span class="h-1.5 flex-1 rounded-full bg-mist transition-colors duration-500" data-bar={i}></span>)}
+            {Array.from({ length: total + 1 }).map((_, i) => <span class="h-1.5 flex-1 rounded-full bg-mist transition-colors duration-500" data-bar={i}></span>)}
           </div>
-          <p class="mt-4 text-[14px] font-bold text-muted" data-step-label>Вопрос 1 из 4</p>
+          <p class="mt-4 text-[14px] font-bold text-muted" data-step-label>Вопрос 1 из {total}</p>
 
           {questions.map((q, i) => (
             <fieldset class:list={['mt-4', i > 0 && 'hidden']} data-step={i}>
               <legend class="font-display text-2xl font-semibold">{q.label}</legend>
-              <p class="mt-2 text-[15px] text-muted">{q.hint}</p>
+              <p class="mt-2 text-[15px] text-muted">{q.hint}{q.link && <> · <a href="/kak-izmerit/" class="font-semibold text-coral underline underline-offset-2" target="_blank">как измерить</a></>}</p>
               <p class="mt-8 text-center font-display text-5xl font-semibold"><output data-out={q.key}>{q.value}</output> <span class="text-2xl text-muted">{q.unit}</span></p>
               <input type="range" name={q.key} min={q.min} max={q.max} value={q.value} class="mt-6" aria-label={`${q.label}, ${q.unit}`} data-q={q.key} />
               <div class="mt-2 flex justify-between text-[13px] text-muted"><span>{q.min} {q.unit}</span><span>{q.max} {q.unit}</span></div>
+              {q.price && <p class="mt-5 rounded-2xl bg-cream px-4 py-3 text-center text-[15px]">Стоимость: <b class="font-display text-lg" data-quiz-price>{fmt(calcPrice(q.value))}</b> · без залога</p>}
             </fieldset>
           ))}
 
-          <fieldset class="mt-4 hidden" data-step="4">
+          <fieldset class="mt-4 hidden" data-step={total}>
             <legend class="font-display text-2xl font-semibold">Куда перезвонить?</legend>
             <label class="mt-5 block text-[14px] font-bold" for="q-name">Имя</label>
             <input id="q-name" name="name" autocomplete="name" class="mt-1.5 w-full rounded-2xl bg-cream px-4 py-3.5 text-lg ring-1 ring-ink/10 outline-none focus:ring-2 focus:ring-coral" placeholder="Например, Анна" />
             <label class="mt-4 block text-[14px] font-bold" for="q-phone">Телефон</label>
             <input id="q-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required class="mt-1.5 w-full rounded-2xl bg-cream px-4 py-3.5 text-lg ring-1 ring-ink/10 outline-none focus:ring-2 focus:ring-coral" placeholder="+7 900 000-00-00" aria-describedby="q-err" />
             <p id="q-err" class="mt-2 hidden text-[14px] font-semibold text-coral" data-err>Проверьте номер — нужно 10 цифр после +7</p>
-            <p class="mt-5 text-[14px] font-bold">Как удобнее отправить заявку?</p>
-            <div class="mt-2 grid gap-2 sm:grid-cols-2">
-              <button type="submit" value="wa" class="btn btn-primary">Через WhatsApp</button>
-              <button type="submit" value="tg" class="btn btn-dark">Через Telegram</button>
+
+            <label class="mt-5 flex cursor-pointer items-start gap-3 text-[14px] leading-snug text-muted">
+              <input type="checkbox" name="consent" required class="mt-0.5 size-5 shrink-0 accent-coral" data-consent />
+              <span>Я согласен(на) на <a href="/soglasie/" target="_blank" class="font-semibold text-ink underline underline-offset-2">обработку персональных данных</a> и принимаю <a href="/polzovatelskoe-soglashenie/" target="_blank" class="font-semibold text-ink underline underline-offset-2">пользовательское соглашение</a> и <a href="/politika-konfidencialnosti/" target="_blank" class="font-semibold text-ink underline underline-offset-2">политику конфиденциальности</a></span>
+            </label>
+            <p class="mt-2 hidden text-[14px] font-semibold text-coral" data-consent-err>Чтобы отправить заявку, отметьте согласие</p>
+
+            <div class="mt-5 grid gap-2 sm:grid-cols-2">
+              <button type="submit" value="tg" class="btn !bg-[#2aabee] text-white hover:!bg-[#1e96d4]"><Icon name="tg" class="size-5" />Отправить в Telegram</button>
+              <button type="submit" value="call" class="btn btn-primary"><Icon name="phone" class="size-5" />Позвонить сейчас</button>
             </div>
-            <p class="mt-3 text-[12px] text-muted">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
           </fieldset>
 
           <div class="mt-8 flex items-center justify-between" data-nav>
@@ -62,10 +71,11 @@ const questions = [
             <button type="button" class="btn btn-dark" data-next>Дальше <Icon name="arrow" class="size-5" /></button>
           </div>
 
-          <div class="hidden py-8 text-center" data-done role="status">
+          <div class="hidden py-6 text-center" data-done role="status">
             <span class="mx-auto grid size-16 place-items-center rounded-full bg-mint/20 text-[#137a57]"><Icon name="check" class="size-8" /></span>
-            <p class="mt-4 font-display text-2xl font-semibold">Заявка готова!</p>
-            <p class="mt-2 text-muted">Отправьте сообщение в открывшемся окне — и мы перезвоним в течение 15 минут. Или звоните сразу: <a class="font-bold text-coral" href={SITE.phoneHref}>{SITE.phone}</a></p>
+            <p class="mt-4 font-display text-2xl font-semibold">Почти готово!</p>
+            <p class="mt-2 text-muted" data-done-text></p>
+            <a href={SITE.phoneHref} class="btn btn-primary mt-5"><Icon name="phone" class="size-5" />{SITE.phone}</a>
           </div>
         </form>
       </div>
@@ -74,49 +84,62 @@ const questions = [
 </section>
 
 <script>
-  import { SITE } from '../data/site';
+  import { SITE, calcPrice, fmt } from '../data/site';
   const form = document.querySelector<HTMLFormElement>('[data-quiz]');
   if (form) {
     const steps = [...form.querySelectorAll<HTMLElement>('[data-step]')];
+    const last = steps.length - 1;
     const bars = [...form.querySelectorAll<HTMLElement>('[data-bar]')];
     const prev = form.querySelector<HTMLButtonElement>('[data-prev]')!;
     const next = form.querySelector<HTMLButtonElement>('[data-next]')!;
     const label = form.querySelector<HTMLElement>('[data-step-label]')!;
     let step = 0;
     const go = (n: number) => {
-      step = Math.max(0, Math.min(steps.length - 1, n));
+      step = Math.max(0, Math.min(last, n));
       steps.forEach((s, i) => s.classList.toggle('hidden', i !== step));
       bars.forEach((b, i) => { b.classList.toggle('bg-coral', i <= step); b.classList.toggle('bg-mist', i > step); });
       prev.disabled = step === 0;
-      next.classList.toggle('hidden', step === steps.length - 1);
-      label.textContent = step < 4 ? `Вопрос ${step + 1} из 4` : 'Последний шаг';
-      if (step === 4) form.querySelector<HTMLInputElement>('#q-name')?.focus();
+      next.classList.toggle('hidden', step === last);
+      label.textContent = step < last ? `Вопрос ${step + 1} из ${last}` : 'Последний шаг';
+      if (step === last) form.querySelector<HTMLInputElement>('#q-name')?.focus();
     };
     prev.addEventListener('click', () => go(step - 1));
     next.addEventListener('click', () => go(step + 1));
+    const priceEl = form.querySelector<HTMLElement>('[data-quiz-price]');
     form.querySelectorAll<HTMLInputElement>('[data-q]').forEach((r) => r.addEventListener('input', () => {
       const out = form.querySelector(`[data-out="${r.dataset.q}"]`); if (out) out.textContent = r.value;
+      if (r.dataset.q === 'days' && priceEl) priceEl.textContent = fmt(calcPrice(Number(r.value)));
     }));
     const phone = form.querySelector<HTMLInputElement>('#q-phone')!;
+    const consent = form.querySelector<HTMLInputElement>('[data-consent]')!;
     const err = form.querySelector<HTMLElement>('[data-err]')!;
+    const cErr = form.querySelector<HTMLElement>('[data-consent-err]')!;
     phone.addEventListener('input', () => err.classList.add('hidden'));
+    consent.addEventListener('change', () => cErr.classList.add('hidden'));
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const digits = phone.value.replace(/\D/g, '').replace(/^[78]/, '');
       if (digits.length !== 10) { err.classList.remove('hidden'); phone.focus(); return; }
+      if (!consent.checked) { cErr.classList.remove('hidden'); consent.focus(); return; }
       const d = new FormData(form);
+      const days = Number(d.get('days'));
       const text = [
-        'Здравствуйте! Хочу арендовать инвалидное кресло.',
+        'Здравствуйте! Хочу арендовать инвалидную коляску.',
+        `Срок: ${days} дн. (≈ ${fmt(calcPrice(days))})`,
         `Вес: ${d.get('weight')} кг, рост: ${d.get('height')} см`,
-        `Дверной проём: ${d.get('door')} см, лифт: ${d.get('lift')} см`,
+        `Дверь: ${d.get('door')} см, лифт: ${d.get('lift')} см`,
         `Имя: ${d.get('name') || '—'}, телефон: +7${digits}`,
       ].join('\n');
       const via = (e.submitter as HTMLButtonElement | null)?.value;
-      const url = via === 'tg'
-        ? `${SITE.telegramBot}?start=podbor`
-        : `${SITE.whatsappHref}?text=${encodeURIComponent(text)}`;
-      if (via === 'tg') navigator.clipboard?.writeText(text).catch(() => {});
-      window.open(url, '_blank', 'noopener');
+      const doneText = form.querySelector<HTMLElement>('[data-done-text]')!;
+      if (via === 'tg') {
+        navigator.clipboard?.writeText(text).catch(() => {});
+        window.open(`${SITE.telegramBot}?start=podbor`, '_blank', 'noopener');
+        doneText.textContent = 'Мы скопировали вашу заявку — вставьте её в чат Telegram-бота и отправьте. Или позвоните нам:';
+      } else {
+        doneText.textContent = 'Набираем номер… Если звонок не начался — нажмите кнопку ниже или напишите нам в Telegram.';
+        window.location.href = SITE.phoneHref;
+      }
       form.querySelector('[data-nav]')?.classList.add('hidden');
       steps.forEach((s) => s.classList.add('hidden'));
       label.classList.add('hidden');

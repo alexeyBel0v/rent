@@ -12,9 +12,8 @@ type Props = {
   crumbs?: Crumb[];
   schema?: Record<string, unknown>[];
   ogImage?: string;
-  darkHeader?: boolean;
 };
-const { title, description, keywords, crumbs = [], schema = [], ogImage = '/og.jpg', darkHeader = false } = Astro.props;
+const { title, description, keywords, crumbs = [], schema = [], ogImage = '/og.jpg', } = Astro.props;
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
 
 const business = {
@@ -72,7 +71,7 @@ const ld = [business, ...(breadcrumbs ? [breadcrumbs] : []), ...schema];
 </head>
 <body>
   <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2">К содержимому</a>
-  <Header dark={darkHeader} />
+  <Header />
   <main id="main">
     {crumbs.length > 0 && (
       <nav aria-label="Хлебные крошки" class="container-x pt-28 text-sm text-muted">
@@ -91,13 +90,22 @@ const ld = [business, ...(breadcrumbs ? [breadcrumbs] : []), ...schema];
   </main>
   <Footer />
 
-  <!-- Липкая панель на мобильном -->
-  <div class="fixed inset-x-3 bottom-3 z-40 flex gap-2 md:hidden" data-mobilebar>
-    <a href={SITE.phoneHref} class="btn btn-dark flex-1 !py-3.5 shadow-xl" aria-label={`Позвонить ${SITE.phone}`}>
-      <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1z"/></svg>
-      Позвонить
+  <!-- Круглые кнопки связи -->
+  <div class="fixed right-4 bottom-4 z-40 flex flex-col gap-3 md:right-6 md:bottom-6" data-fab>
+    <a href={SITE.telegramBot} target="_blank" rel="noopener" class="fab grid size-14 place-items-center rounded-full bg-[#2aabee] text-white shadow-[0_12px_30px_-8px_rgb(42_171_238/.7)] transition-transform hover:scale-105 active:scale-95" aria-label="Написать в Telegram">
+      <svg class="size-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.4 4.3 2.9 11.4c-1.3.5-1.2 1.2-.2 1.5l4.7 1.5 1.8 5.6c.2.6.4.8.9.8.4 0 .6-.2.9-.4l2.3-2.2 4.7 3.5c.9.5 1.5.2 1.7-.8l3.1-14.5c.3-1.3-.5-1.8-1.4-1.5zM9.6 14.4l-.4 4 -1.4-4.6L18.5 7z"/></svg>
     </a>
-    <a href="/#podbor" class="btn btn-primary flex-1 !py-3.5 shadow-xl">Подобрать</a>
+    <a href={SITE.phoneHref} class="fab fab-pulse relative grid size-14 place-items-center rounded-full bg-coral text-white shadow-[0_12px_30px_-8px_rgb(229_72_77/.8)] transition-transform hover:scale-105 active:scale-95" aria-label={`Позвонить ${SITE.phone}`}>
+      <svg class="size-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg>
+    </a>
+  </div>
+
+  <!-- Cookie -->
+  <div class="fixed left-3 right-20 bottom-3 z-[45] hidden md:right-auto md:bottom-6 md:left-6 md:max-w-md" data-cookie role="region" aria-label="Уведомление о cookie">
+    <div class="flex items-center gap-3 rounded-2xl bg-ink p-3 pl-4 text-[13px] text-white/80 shadow-2xl">
+      <p>Мы используем cookie. Оставаясь на сайте, вы соглашаетесь с <a href="/cookie/" class="font-semibold text-white underline underline-offset-2">политикой cookie</a>.</p>
+      <button class="btn btn-primary shrink-0 !px-4 !py-2.5 !text-[13px]" data-cookie-ok>Ок</button>
+    </div>
   </div>
 
   <script>

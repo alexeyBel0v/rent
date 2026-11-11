@@ -7,7 +7,7 @@ const year = new Date().getFullYear();
   <div class="container-x grid gap-10 md:grid-cols-4">
     <div class="md:col-span-2">
       <Logo light />
-      <p class="mt-5 max-w-sm text-[15px] leading-relaxed">Прокат и аренда инвалидных колясок в Москве. Без залога, от 3 дней, с дезинфекцией перед каждой выдачей.</p>
+      <p class="mt-5 max-w-sm text-[15px] leading-relaxed">Прокат немецких инвалидных колясок Ottobock и Meyra в Москве. Без залога, от 3 дней, с дезинфекцией перед каждой выдачей.</p>
     </div>
     <nav aria-label="Разделы сайта">
       <p class="mb-3 font-bold text-white">Разделы</p>
@@ -16,7 +16,8 @@ const year = new Date().getFullYear();
         <li><a class="hover:text-white" href="/ceny/">Цены на аренду</a></li>
         <li><a class="hover:text-white" href="/dostavka/">Доставка и возврат</a></li>
         <li><a class="hover:text-white" href="/arenda-na-mesyac/">Аренда на месяц</a></li>
-        <li><a class="hover:text-white" href="/stati/">Полезные статьи</a></li>
+        <li><a class="hover:text-white" href="/kak-izmerit/">Как измерить для коляски</a></li>
+        <li><a class="hover:text-white" href="/stati/">Статьи и инструкции</a></li>
         <li><a class="hover:text-white" href="/faq/">Вопросы и ответы</a></li>
       </ul>
     </nav>
@@ -24,15 +25,19 @@ const year = new Date().getFullYear();
       <p class="mb-3 font-bold text-white">Контакты</p>
       <ul class="space-y-2 text-[15px]">
         <li><a class="font-bold text-white hover:text-coral" href={SITE.phoneHref}>{SITE.phone}</a></li>
-        <li><a class="hover:text-white" href={SITE.whatsappHref} target="_blank" rel="noopener">WhatsApp {SITE.whatsapp}</a></li>
-        <li><a class="hover:text-white" href={SITE.telegramBot} target="_blank" rel="noopener">Telegram-бот</a></li>
+        <li><a class="hover:text-white" href={SITE.telegramBot} target="_blank" rel="noopener">Telegram {SITE.telegramLabel}</a></li>
         <li><a class="hover:text-white" href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
         <li>Москва</li>
       </ul>
     </div>
   </div>
   <div class="container-x mt-12 flex flex-col gap-2 border-t border-white/10 pt-6 text-[13px] md:flex-row md:justify-between">
-    <p>© {year} {SITE.name}. Прокат инвалидных кресел в Москве.</p>
-    <p>Информация на сайте не является публичной офертой.</p>
+    <div><p>© {year} {SITE.name}. Прокат инвалидных колясок в Москве.</p><p class="mt-1">{SITE.legal.operator}, ИНН {SITE.legal.inn}, {SITE.legal.ogrn}. Информация на сайте не является публичной офертой.</p></div>
+    <nav aria-label="Документы" class="flex flex-wrap gap-x-4 gap-y-1">
+      <a class="hover:text-white" href="/politika-konfidencialnosti/">Политика конфиденциальности</a>
+      <a class="hover:text-white" href="/soglasie/">Согласие на обработку ПД</a>
+      <a class="hover:text-white" href="/polzovatelskoe-soglashenie/">Пользовательское соглашение</a>
+      <a class="hover:text-white" href="/cookie/">Политика cookie</a>
+    </nav>
   </div>
 </footer>
